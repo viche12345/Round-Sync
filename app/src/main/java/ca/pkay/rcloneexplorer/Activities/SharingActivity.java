@@ -190,15 +190,6 @@ public class SharingActivity extends AppCompatActivity implements ShareRemotesFr
             Dialogs.dismissSilently(loadingDialog);
 
             for (String uploadFile : uploadList) {
-                //Todo: Allow Upload!
-                /*
-                Intent intent = new Intent(context, UploadService.class);
-                intent.putExtra(UploadService.LOCAL_PATH_ARG, uploadFile);
-                intent.putExtra(UploadService.UPLOAD_PATH_ARG, path);
-                intent.putExtra(UploadService.REMOTE_ARG, remote);
-                tryStartService(context, intent);
-                 */
-
                 EphemeralTaskManager.Companion.queueUpload(this.context, remote, uploadFile, path);
             }
             finish();
