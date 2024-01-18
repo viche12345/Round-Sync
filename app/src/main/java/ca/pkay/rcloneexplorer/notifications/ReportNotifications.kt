@@ -4,8 +4,6 @@ import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.datastore.core.DataStore
@@ -39,7 +37,6 @@ class ReportNotifications(var mContext: Context) {
         val NOTIFICATION_LAST_SUCCESS_ID_PREFERENCE = intPreferencesKey("NOTIFICATION_LAST_SUCCESS_ID")
         val NOTIFICATION_LAST_FAIL_ID_PREFERENCE = intPreferencesKey("NOTIFICATION_LAST_FAIL_ID")
     }
-
 
     fun lastSuccededNotification(id: Int) {
         runBlocking {

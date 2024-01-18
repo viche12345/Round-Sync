@@ -1,6 +1,7 @@
 package ca.pkay.rcloneexplorer.notifications.support
 
 import android.annotation.SuppressLint
+import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -11,6 +12,7 @@ import ca.pkay.rcloneexplorer.R
 import ca.pkay.rcloneexplorer.notifications.GenericSyncNotification
 import ca.pkay.rcloneexplorer.util.PermissionManager
 
+@Deprecated("Use WorkerNotification in combination with workers.")
 abstract class GenericNotification(var mContext: Context) {
 
     abstract val sChannelId: String
@@ -61,9 +63,9 @@ abstract class GenericNotification(var mContext: Context) {
         content: String,
         bigTextArray: java.util.ArrayList<String>,
         percent: Int
-    ) {
+    ): Notification? {
         if(content.isBlank()){
-            return
+            return null
         }
 
         val cancelIntent = Intent(mContext, serviceCancelClass)
@@ -79,9 +81,7 @@ abstract class GenericNotification(var mContext: Context) {
             cancelPendingIntent,
             sChannelId
         )
-        builder.let {
-            notify(it, persistentId)
-        }
+        return builder.build()
     }
 
     fun showFinishedNotification(notificationID: Int, contentText: String) {
