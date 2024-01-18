@@ -47,8 +47,18 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
         const val EPHEMERAL_TYPE = "TASK_EPHEMERAL_TYPE"
         const val REMOTE_ID = "REMOTE_ID"
         const val REMOTE_TYPE = "REMOTE_TYPE"
+
         const val DOWNLOAD_TARGETPATH = "DOWNLOAD_TARGETPATH"
         const val DOWNLOAD_SOURCE = "DOWNLOAD_SOURCE"
+
+        const val UPLOAD_FILE = "UPLOAD_FILE"
+        const val UPLOAD_TARGETPATH = "UPLOAD_TARGETPATH"
+
+        const val MOVE_FILE = "MOVE_FILE"
+        const val MOVE_TARGETPATH = "MOVE_TARGETPATH"
+
+        const val DELETE_FILE = "DELETE_FILE"
+        const val DELETE_PATH = "DELETE_PATH"
     }
 
     internal enum class FAILURE_REASON {
@@ -104,35 +114,68 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
             when(type){
                 Type.DOWNLOAD -> {
                     val target = inputData.getString(DOWNLOAD_TARGETPATH)
-                    val sourceParcelByteArray = inputData.getByteArray(DOWNLOAD_SOURCE)
-                    if(sourceParcelByteArray == null){
-                        log("No valid target was passed!")
+                    val fileItem = getFileitemFromParcel(DOWNLOAD_SOURCE)
+
+                    if(fileItem == null){
+                        log("$DOWNLOAD_SOURCE: No valid target was passed!")
                         return Result.failure()
                     }
 
-                    val parcel = Parcel.obtain()
-                    parcel.unmarshall(sourceParcelByteArray, 0, sourceParcelByteArray.size)
-                    parcel.setDataPosition(0)
-
                     sRcloneProcess = Rclone(mContext).downloadFile(
                         remoteItem,
-                        FileItem.CREATOR.createFromParcel(parcel),
+                        fileItem,
                         target
                     )
                 }
-                Type.UPLOAD -> TODO()
-                Type.MOVE -> TODO()
-                Type.DELETE -> TODO()
+                Type.UPLOAD -> {
+                    val target = inputData.getString(UPLOAD_TARGETPATH)
+                    val file = inputData.getString(UPLOAD_FILE)
+
+                    sRcloneProcess = Rclone(mContext).uploadFile(
+                        remoteItem,
+                        target,
+                        file
+                    )
+                }
+                Type.MOVE -> {
+                    val target = inputData.getString(MOVE_TARGETPATH)
+                    val fileItem = getFileitemFromParcel(MOVE_FILE)
+
+                    if(fileItem == null){
+                        log("$MOVE_FILE: No valid target was passed!")
+                        return Result.failure()
+                    }
+
+                    sRcloneProcess = Rclone(mContext).moveTo(
+                        remoteItem,
+                        fileItem,
+                        target
+                    )
+                }
+                Type.DELETE -> {
+                    val path = inputData.getString(DELETE_PATH)
+                    val fileItem = getFileitemFromParcel(DELETE_FILE)
+
+                    if(fileItem == null){
+                        log("$DELETE_FILE: No valid target was passed!")
+                        return Result.failure()
+                    }
+
+                    sRcloneProcess = Rclone(mContext).deleteItems(
+                        remoteItem,
+                        fileItem
+                    )
+                }
             }
 
             mNotificationManager?.setCancelId(id)
             if(preconditionsMet()) {
                 handleSync(mTitle)
+                postSync()
             } else {
                 log("Preconditions are not met!")
                 return Result.failure()
             }
-            postSync()
 
             // Indicate whether the work finished successfully with the Result
             return Result.success()
@@ -400,4 +443,17 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
             }
         }
 
+    private fun getFileitemFromParcel(key: String): FileItem? {
+
+        val sourceParcelByteArray = inputData.getByteArray(key)
+        if(sourceParcelByteArray == null){
+            log("No valid target was passed!")
+            return null
+        }
+
+        val parcel = Parcel.obtain()
+        parcel.unmarshall(sourceParcelByteArray, 0, sourceParcelByteArray.size)
+        parcel.setDataPosition(0)
+        return FileItem.CREATOR.createFromParcel(parcel)
+    }
 }

@@ -29,35 +29,65 @@ class EphemeralTaskManager(private var mContext: Context) {
 
             data.putString(EphemeralWorker.DOWNLOAD_TARGETPATH, selectedPath)
 
-
-            val parcel = Parcel.obtain()
-            downloadItem.writeToParcel(parcel, 0)
-            data.putByteArray(EphemeralWorker.DOWNLOAD_SOURCE, parcel.marshall())
-
+            addFileItemToData(EphemeralWorker.DOWNLOAD_SOURCE, downloadItem, data)
             EphemeralTaskManager(context).work(data.build(), "")
         }
 
         fun queueUpload(
             context: Context,
             remote: RemoteItem,
-            uploadFile: String,
-            currentPath: String
-        ) {}
+            file: String,
+            targetpath: String
+        ) {
+            val data = Data.Builder()
+            data.putString(EphemeralWorker.EPHEMERAL_TYPE, Type.UPLOAD.name)
+            data.putString(EphemeralWorker.REMOTE_ID, remote.name)
+            data.putString(EphemeralWorker.REMOTE_TYPE, remote.typeReadable)
+
+            data.putString(EphemeralWorker.UPLOAD_TARGETPATH, targetpath)
+            data.putString(EphemeralWorker.UPLOAD_FILE, file)
+
+            EphemeralTaskManager(context).work(data.build(), "")
+        }
 
         fun queueMove(
             context: Context,
             remote: RemoteItem,
             currentPath: String,
-            moveItem: FileItem,
-            path2: String
-        ) {}
+            file: FileItem,
+            readablePath: String
+        ) {
+            val data = Data.Builder()
+            data.putString(EphemeralWorker.EPHEMERAL_TYPE, Type.MOVE.name)
+            data.putString(EphemeralWorker.REMOTE_ID, remote.name)
+            data.putString(EphemeralWorker.REMOTE_TYPE, remote.typeReadable)
+
+            addFileItemToData(EphemeralWorker.MOVE_FILE, file, data)
+            data.putString(EphemeralWorker.MOVE_TARGETPATH, currentPath)
+            EphemeralTaskManager(context).work(data.build(), "")
+        }
 
         fun queueDelete(
             context: Context,
             remote: RemoteItem,
-            deleteItem: FileItem,
+            file: FileItem,
             currentPath: String
-        ) {}
+        ) {
+            val data = Data.Builder()
+            data.putString(EphemeralWorker.EPHEMERAL_TYPE, Type.DELETE.name)
+            data.putString(EphemeralWorker.REMOTE_ID, remote.name)
+            data.putString(EphemeralWorker.REMOTE_TYPE, remote.typeReadable)
+
+            addFileItemToData(EphemeralWorker.DELETE_FILE, file, data)
+            data.putString(EphemeralWorker.DELETE_PATH, currentPath)
+            EphemeralTaskManager(context).work(data.build(), "")
+        }
+
+        private fun addFileItemToData(key: String, fileItem: FileItem, data: Data.Builder){
+            val parcel = Parcel.obtain()
+            fileItem.writeToParcel(parcel, 0)
+            data.putByteArray(key, parcel.marshall())
+        }
     }
 
 
