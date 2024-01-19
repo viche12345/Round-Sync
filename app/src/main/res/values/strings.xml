@@ -52,14 +52,12 @@
     <string name="config_file_lost_statement">Your current configuration will be lost</string>
     <string name="continue_statement">Continue</string>
     <string name="download_complete">Download complete</string>
-    <string name="download_service_notification_description">File downloads</string>
     <string name="streaming_service_notification_title">Streaming Service</string>
     <string name="streaming_service_notification_content">Serving on http://127.0.0.1:%1$d</string>
     <string name="streaming_service_notification_channel_description">Streaming service</string>
     <string name="streaming_task_failed">Could not stream file</string>
     <string name="rcd_service_notification_channel_description">Background Service</string>
     <string name="upload_complete">Upload complete</string>
-    <string name="upload_service_notification_channel_description">File uploads</string>
     <string name="remotes_toolbar_title">Remotes</string>
     <string name="fab_upload_files">Upload Files</string>
     <string name="fab_new_folder">New Folder</string>
@@ -179,7 +177,6 @@
     <string name="background_service_broadcast_data_remote" translatable="false">ca.pkay.rcexplorer.BACKGROUND_SERVICE_BROADCAST_DATA_REMOTE</string>
     <string name="background_service_broadcast_data_path" translatable="false">ca.pkay.rcexplorer.BACKGROUND_SERVICE_BROADCAST_DATA_PATH</string>
     <string name="background_service_broadcast_data_path2" translatable="false">ca.pkay.rcexplorer.BACKGROUND_SERVICE_BROADCAST_DATA_PATH2</string>
-    <string name="background_service_notification_channel_description">Background service for long running tasks like Move and Delete</string>
     <string name="sync_service_notification_channel_description">Background service for sync</string>
     <string name="moving_info">Moving…</string>
     <string name="deleting_info">Deleting…</string>
@@ -560,4 +557,22 @@
     <string name="permissions_batteryoptimizations_label">Battery Optimizations</string>
     <string name="permissions_batteryoptimizations_description">If the device is asleep, your tasks might be delayed when this permission is not granted.</string>
     <string name="sync_service_notification_startingsync">Starting Sync...</string>
+    <string name="sync_service_notification_group">Group for Sync</string>
+    <string name="workernotification_group_description">Task Notifications</string>
+    <string name="download_service_ongoing_notification_title">Active Downloads</string>
+    <string name="download_service_ongoing_notification_description">This notification shows the progress of the current download</string>
+    <string name="download_service_success_notification_title">Successful Downloads</string>
+    <string name="download_service_success_notification_description">Successful Downloads will show a Message in this Channel</string>
+    <string name="download_service_failed_notification_description">Failed Downloads will show a Message in this Channel</string>
+    <string name="download_service_failed_notification_title">Failed Downloads</string>
+    <string name="upload_service_ongoing_notification_title">Active Uploads</string>
+    <string name="upload_service_ongoing_notification_description">This notification shows the progress of the current upload</string>
+    <string name="upload_service_success_notification_title">Successful Uploads</string>
+    <string name="upload_service_success_notification_description">Successful Uploads will show a Message in this Channel</string>
+    <string name="upload_service_failed_notification_description">Failed Uploads will show a Message in this Channel</string>
+    <string name="upload_service_failed_notification_title">Failed Uploads</string>
+    <string name="delete_service_notification_title">Deletions</string>
+    <string name="delete_service_notification_description">This notification shows deletions</string>
+    <string name="move_service_notification_title">Moves</string>
+    <string name="move_service_notification_description">This notification shows moves</string>
 </resources>

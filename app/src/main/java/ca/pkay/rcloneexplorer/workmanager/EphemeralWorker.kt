@@ -15,14 +15,11 @@ import androidx.preference.PreferenceManager
 import androidx.work.ForegroundInfo
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import ca.pkay.rcloneexplorer.Database.DatabaseHandler
 import ca.pkay.rcloneexplorer.Items.FileItem
 import ca.pkay.rcloneexplorer.Items.RemoteItem
-import ca.pkay.rcloneexplorer.Items.Task
 import ca.pkay.rcloneexplorer.Log2File
 import ca.pkay.rcloneexplorer.R
 import ca.pkay.rcloneexplorer.Rclone
-import ca.pkay.rcloneexplorer.notifications.GenericSyncNotification
 import ca.pkay.rcloneexplorer.notifications.prototypes.WorkerNotification
 import ca.pkay.rcloneexplorer.notifications.support.StatusObject
 import ca.pkay.rcloneexplorer.util.FLog
@@ -30,7 +27,6 @@ import ca.pkay.rcloneexplorer.util.SyncLog
 import ca.pkay.rcloneexplorer.util.WifiConnectivitiyUtil
 import de.felixnuesse.extract.extensions.tag
 import de.felixnuesse.extract.notifications.implementations.DownloadWorkerNotification
-import kotlinx.serialization.json.Json
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -39,9 +35,11 @@ import java.io.InputStreamReader
 import java.io.InterruptedIOException
 import kotlin.random.Random
 import android.util.Log
+import de.felixnuesse.extract.notifications.implementations.UploadWorkerNotification
 
 
 class EphemeralWorker (private var mContext: Context, workerParams: WorkerParameters): Worker(mContext, workerParams) {
+
 
     companion object {
         const val EPHEMERAL_TYPE = "TASK_EPHEMERAL_TYPE"
@@ -84,12 +82,10 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
     private val ongoingNotificationID = Random.nextInt()
 
 
-    private var mTitle: String = mContext.getString(R.string.sync_service_notification_startingsync)
-
+    private var mTitle: String = getString(mNotificationManager?.titleStartingSync)
 
     override fun doWork(): Result {
 
-        prepareNotifications()
         registerBroadcastReceivers()
 
         updateForegroundNotification(mNotificationManager?.updateNotification(
@@ -103,10 +99,6 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
         if (inputData.keyValueMap.containsKey(EPHEMERAL_TYPE)){
             val type = Type.valueOf(inputData.getString(EPHEMERAL_TYPE) ?: "")
             mNotificationManager = prepareNotificationManager(type)
-
-            if (mNotificationManager == null){
-                log("Warning: No valid Notifications are available")
-            }
 
             val remoteItem = getRemoteitemFromParcel(REMOTE)
             if(remoteItem == null){
@@ -201,9 +193,10 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
         postSync()
     }
 
-    fun prepareNotificationManager(type: Type): WorkerNotification? {
+    fun prepareNotificationManager(type: Type): WorkerNotification {
         return when(type){
             Type.DOWNLOAD -> DownloadWorkerNotification(mContext)
+            Type.UPLOAD -> UploadWorkerNotification(mContext)
             else -> DownloadWorkerNotification(mContext)
         }
     }
@@ -386,26 +379,6 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
         return true
     }
 
-    private fun prepareNotifications() {
-
-        GenericSyncNotification(mContext).setNotificationChannel(
-            mNotificationManager?.CHANNEL_ID?:"",
-            getString(R.string.sync_service_notification_channel_title),
-            getString(R.string.sync_service_notification_channel_description)
-        )
-        GenericSyncNotification(mContext).setNotificationChannel(
-            mNotificationManager?.CHANNEL_SUCCESS_ID?:"",
-            getString(R.string.sync_service_notification_channel_success_title),
-            getString(R.string.sync_service_notification_channel_success_description)
-        )
-        GenericSyncNotification(mContext).setNotificationChannel(
-            mNotificationManager?.CHANNEL_FAIL_ID?:"",
-            getString(R.string.sync_service_notification_channel_fail_title),
-            getString(R.string.sync_service_notification_channel_fail_description)
-        )
-
-    }
-
     private fun sendUploadFinishedBroadcast(remote: String, path: String?) {
         val intent = Intent()
         intent.action = getString(R.string.background_service_broadcast)
@@ -417,8 +390,11 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
     // Creates an instance of ForegroundInfo which can be used to update the
     // ongoing notification.
     private fun updateForegroundNotification(notification: Notification?) {
-        notification?.let {
-            setForegroundAsync(ForegroundInfo(ongoingNotificationID, it, FOREGROUND_SERVICE_TYPE_DATA_SYNC))
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            notification?.let {
+                setForegroundAsync(ForegroundInfo(ongoingNotificationID, it, FOREGROUND_SERVICE_TYPE_DATA_SYNC))
+            }
         }
     }
 
@@ -427,8 +403,12 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
         FLog.e(tag(), "EphemeralWorker: $message")
     }
 
-    private fun getString(@StringRes resId: Int): String {
-        return mContext.getString(resId)
+    private fun getString(@StringRes resId: Int?): String {
+        return if (resId == null) {
+            "Error"
+        } else {
+            mContext.getString(resId)
+        }
     }
 
     private fun registerBroadcastReceivers() {
@@ -459,6 +439,7 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
         parcel.setDataPosition(0)
         return FileItem.CREATOR.createFromParcel(parcel)
     }
+
     private fun getRemoteitemFromParcel(key: String): RemoteItem? {
 
         val sourceParcelByteArray = inputData.getByteArray(key)

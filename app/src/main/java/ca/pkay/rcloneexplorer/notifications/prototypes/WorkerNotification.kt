@@ -6,9 +6,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
 import ca.pkay.rcloneexplorer.BroadcastReceivers.SyncRestartAction
 import ca.pkay.rcloneexplorer.R
@@ -18,13 +15,36 @@ import ca.pkay.rcloneexplorer.util.NotificationUtils
 import ca.pkay.rcloneexplorer.workmanager.SyncWorker
 import ca.pkay.rcloneexplorer.workmanager.SyncWorker.Companion.EXTRA_TASK_ID
 import de.felixnuesse.extract.extensions.tag
+import de.felixnuesse.extract.notifications.DiscardChannels
 import java.util.UUID
 
 abstract class WorkerNotification(var mContext: Context) {
 
     abstract val CHANNEL_ID: String
-    abstract val CHANNEL_SUCCESS_ID: String
-    abstract val CHANNEL_FAIL_ID: String
+
+
+    val CHANNEL_SUCCESS_ID = this.CHANNEL_ID +"_success"
+    open val CHANNEL_FAIL_ID = this.CHANNEL_ID+"_fail"
+
+    val GROUP_ID = "de.felixnuesse.extract.taskworker.group"
+    val GROUP_DESCRIPTION = mContext.getString(R.string.workernotification_group_description)
+
+
+
+    // Todo: Either make all resources, or all strings. Not both.
+    abstract val titleStartingSync: Int
+    abstract val serviceOngoingTitle: Int
+    abstract val serviceFailed: Int
+    abstract val serviceCancelled: Int
+    abstract val serviceSuccess: Int
+
+
+    abstract val channel_ongoing_title: String
+    abstract val channel_ongoing_description: String
+    abstract val channel_success_title: String
+    abstract val channel_success_description: String
+    abstract val channel_failed_title: String
+    abstract val channel_failed_description: String
 
 
     abstract val PERSISTENT_NOTIFICATION_ID: Int
@@ -33,13 +53,39 @@ abstract class WorkerNotification(var mContext: Context) {
         const val CANCEL_ID_NOTSET = "CANCEL_ID_NOTSET"
     }
 
-    private val OPERATION_FAILED_GROUP = "ca.pkay.rcexplorer.OPERATION_FAILED_GROUP" // Check if those can stay the same when channels are muted
+    // Check if those can stay the same when channels are muted
+    private val OPERATION_FAILED_GROUP = "ca.pkay.rcexplorer.OPERATION_FAILED_GROUP"
     private val OPERATION_SUCCESS_GROUP = "ca.pkay.rcexplorer.OPERATION_SUCCESS_GROUP"
 
 
     private var mCancelUnsetId: UUID = UUID.randomUUID()
     private var mCancelId: UUID = mCancelUnsetId
 
+
+    fun generateChannels() {
+        DiscardChannels.discard(mContext)
+        GenericSyncNotification(mContext).setNotificationChannel(
+                CHANNEL_ID,
+                channel_ongoing_title,
+                channel_ongoing_description,
+                GROUP_ID,
+                GROUP_DESCRIPTION
+        )
+        GenericSyncNotification(mContext).setNotificationChannel(
+                CHANNEL_SUCCESS_ID,
+                channel_success_title,
+                channel_success_description,
+                GROUP_ID,
+                GROUP_DESCRIPTION
+        )
+        GenericSyncNotification(mContext).setNotificationChannel(
+                CHANNEL_FAIL_ID,
+                channel_failed_title,
+                channel_failed_description,
+                GROUP_ID,
+                GROUP_DESCRIPTION
+        )
+    }
 
 
     fun setCancelId(id: UUID) {
@@ -60,7 +106,7 @@ abstract class WorkerNotification(var mContext: Context) {
         )
         val builder = NotificationCompat.Builder(mContext, CHANNEL_FAIL_ID)
             .setSmallIcon(R.drawable.ic_twotone_cloud_error_24)
-            .setContentTitle(mContext.getString(R.string.operation_failed))
+            .setContentTitle(mContext.getString(serviceFailed))
             .setContentText(content)
             .setStyle(
                 NotificationCompat.BigTextStyle().bigText(content)
@@ -89,7 +135,7 @@ abstract class WorkerNotification(var mContext: Context) {
         )
         val builder = NotificationCompat.Builder(mContext, CHANNEL_FAIL_ID)
             .setSmallIcon(R.drawable.ic_twotone_cloud_error_24)
-            .setContentTitle(mContext.getString(R.string.operation_failed_cancelled))
+            .setContentTitle(mContext.getString(serviceCancelled))
             .setContentText(content)
             .setStyle(
                 NotificationCompat.BigTextStyle().bigText(content)
@@ -107,7 +153,7 @@ abstract class WorkerNotification(var mContext: Context) {
     fun showSuccessNotification(title: String, content: String, notificationId: Int) {
         val builder = NotificationCompat.Builder(mContext, CHANNEL_SUCCESS_ID)
             .setSmallIcon(R.drawable.ic_twotone_cloud_done_24)
-            .setContentTitle(mContext.getString(R.string.operation_success, title))
+            .setContentTitle(mContext.getString(serviceSuccess, title))
             .setContentText(content)
             .setStyle(
                 NotificationCompat.BigTextStyle().bigText(
@@ -132,7 +178,7 @@ abstract class WorkerNotification(var mContext: Context) {
         }
 
         val builder = GenericSyncNotification(mContext).updateGenericNotification(
-            mContext.getString(R.string.syncing_service, title),
+            mContext.getString(serviceOngoingTitle, title),
             content,
             R.drawable.ic_twotone_rounded_cloud_sync_24,
             bigTextArray,

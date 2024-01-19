@@ -45,14 +45,12 @@
     <string name="config_file_lost_statement">您当前的配置将丢失</string>
     <string name="continue_statement">继续</string>
     <string name="download_complete">下载完成</string>
-    <string name="download_service_notification_description">下载通知</string>
     <string name="streaming_service_notification_title">串流服务</string>
     <string name="streaming_service_notification_content">服务打开在端口 %1$d</string>
     <string name="streaming_service_notification_channel_description">串流服务通知</string>
     <string name="streaming_task_failed">无法流式传输文件</string>
     <string name="rcd_service_notification_channel_description">核心服务通知</string>
     <string name="upload_complete">上传完成</string>
-    <string name="upload_service_notification_channel_description">上传通知</string>
     <string name="remotes_toolbar_title">远端</string>
     <string name="fab_upload_files">上传文件</string>
     <string name="fab_new_folder">新建文件夹</string>

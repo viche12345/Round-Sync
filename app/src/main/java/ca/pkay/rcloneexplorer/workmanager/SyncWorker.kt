@@ -22,6 +22,7 @@ import ca.pkay.rcloneexplorer.Rclone
 import ca.pkay.rcloneexplorer.notifications.GenericSyncNotification
 import ca.pkay.rcloneexplorer.notifications.ReportNotifications
 import ca.pkay.rcloneexplorer.notifications.SyncServiceNotifications
+import ca.pkay.rcloneexplorer.notifications.SyncServiceNotifications.Companion.GROUP_ID
 import ca.pkay.rcloneexplorer.notifications.support.StatusObject
 import ca.pkay.rcloneexplorer.util.FLog
 import ca.pkay.rcloneexplorer.util.SyncLog
@@ -345,24 +346,32 @@ class SyncWorker (private var mContext: Context, workerParams: WorkerParameters)
     private fun prepareNotifications() {
 
         GenericSyncNotification(mContext).setNotificationChannel(
-            SyncServiceNotifications.CHANNEL_ID,
-            getString(R.string.sync_service_notification_channel_title),
-            getString(R.string.sync_service_notification_channel_description)
+                SyncServiceNotifications.CHANNEL_ID,
+                getString(R.string.sync_service_notification_channel_title),
+                getString(R.string.sync_service_notification_channel_description),
+                GROUP_ID,
+                getString(R.string.sync_service_notification_group)
         )
         GenericSyncNotification(mContext).setNotificationChannel(
             SyncServiceNotifications.CHANNEL_SUCCESS_ID,
             getString(R.string.sync_service_notification_channel_success_title),
-            getString(R.string.sync_service_notification_channel_success_description)
+            getString(R.string.sync_service_notification_channel_success_description),
+                GROUP_ID,
+                getString(R.string.sync_service_notification_group)
         )
         GenericSyncNotification(mContext).setNotificationChannel(
             SyncServiceNotifications.CHANNEL_FAIL_ID,
             getString(R.string.sync_service_notification_channel_fail_title),
-            getString(R.string.sync_service_notification_channel_fail_description)
+            getString(R.string.sync_service_notification_channel_fail_description),
+                GROUP_ID,
+                getString(R.string.sync_service_notification_group)
         )
         GenericSyncNotification(mContext).setNotificationChannel(
             ReportNotifications.CHANNEL_REPORT_ID,
             getString(R.string.sync_service_notification_channel_report_title),
-            getString(R.string.sync_service_notification_channel_report_description)
+            getString(R.string.sync_service_notification_channel_report_description),
+                GROUP_ID,
+                getString(R.string.sync_service_notification_group)
         )
 
     }

@@ -9,6 +9,10 @@ import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import ca.pkay.rcloneexplorer.Items.FileItem
 import ca.pkay.rcloneexplorer.Items.RemoteItem
+import de.felixnuesse.extract.notifications.implementations.DeleteWorkerNotification
+import de.felixnuesse.extract.notifications.implementations.DownloadWorkerNotification
+import de.felixnuesse.extract.notifications.implementations.MoveWorkerNotification
+import de.felixnuesse.extract.notifications.implementations.UploadWorkerNotification
 import java.util.Random
 
 
@@ -21,6 +25,8 @@ class EphemeralTaskManager(private var mContext: Context) {
             remote: RemoteItem,
             downloadItem: FileItem,
             selectedPath: String) {
+
+            DownloadWorkerNotification(context).generateChannels()
 
             val data = Data.Builder()
             data.putString(EphemeralWorker.EPHEMERAL_TYPE, Type.DOWNLOAD.name)
@@ -36,8 +42,10 @@ class EphemeralTaskManager(private var mContext: Context) {
             context: Context,
             remote: RemoteItem,
             file: String,
-            targetpath: String
-        ) {
+            targetpath: String) {
+
+            UploadWorkerNotification(context).generateChannels()
+
             val data = Data.Builder()
             data.putString(EphemeralWorker.EPHEMERAL_TYPE, Type.UPLOAD.name)
             addRemoteItemToData(EphemeralWorker.REMOTE, remote, data)
@@ -55,6 +63,9 @@ class EphemeralTaskManager(private var mContext: Context) {
             file: FileItem,
             readablePath: String
         ) {
+
+            MoveWorkerNotification(context).generateChannels()
+
             val data = Data.Builder()
             data.putString(EphemeralWorker.EPHEMERAL_TYPE, Type.MOVE.name)
             addRemoteItemToData(EphemeralWorker.REMOTE, remote, data)
@@ -70,6 +81,9 @@ class EphemeralTaskManager(private var mContext: Context) {
             file: FileItem,
             currentPath: String
         ) {
+
+            DeleteWorkerNotification(context).generateChannels()
+
             val data = Data.Builder()
             data.putString(EphemeralWorker.EPHEMERAL_TYPE, Type.DELETE.name)
             addRemoteItemToData(EphemeralWorker.REMOTE, remote, data)

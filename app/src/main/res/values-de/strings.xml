@@ -44,13 +44,11 @@
     <string name="config_file_lost_statement">Die aktuelle Konfiguration wird ersetzt!</string>
     <string name="continue_statement">Weiter</string>
     <string name="download_complete">Download abgeschlossen</string>
-    <string name="download_service_notification_description">Datei-Downloads</string>
     <string name="streaming_service_notification_title">Streaming-Dienst</string>
     <string name="streaming_service_notification_content">Streaming-Server auf http://127.0.0.1:%1$d</string>
     <string name="streaming_service_notification_channel_description">Streaming-Dienst</string>
     <string name="streaming_task_failed">Laden der Datei fehlgeschlagen</string>
     <string name="upload_complete">Upload abgeschlossen</string>
-    <string name="upload_service_notification_channel_description">Datei-Uploads</string>
     <string name="remotes_toolbar_title">Remotes</string>
     <string name="fab_upload_files">Dateien hochladen</string>
     <string name="fab_new_folder">Neuer Ordner</string>
