@@ -45,8 +45,7 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
 
     companion object {
         const val EPHEMERAL_TYPE = "TASK_EPHEMERAL_TYPE"
-        const val REMOTE_ID = "REMOTE_ID"
-        const val REMOTE_TYPE = "REMOTE_TYPE"
+        const val REMOTE = "REMOTE"
 
         const val DOWNLOAD_TARGETPATH = "DOWNLOAD_TARGETPATH"
         const val DOWNLOAD_SOURCE = "DOWNLOAD_SOURCE"
@@ -109,7 +108,11 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
                 log("Warning: No valid Notifications are available")
             }
 
-            val remoteItem = RemoteItem(inputData.getString(REMOTE_ID), inputData.getString(REMOTE_TYPE))
+            val remoteItem = getRemoteitemFromParcel(REMOTE)
+            if(remoteItem == null){
+                log("$REMOTE: No valid remote was passed!")
+                return Result.failure()
+            }
 
             when(type){
                 Type.DOWNLOAD -> {
@@ -153,7 +156,7 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
                     )
                 }
                 Type.DELETE -> {
-                    val path = inputData.getString(DELETE_PATH)
+                    val d = inputData.getString(DELETE_PATH)
                     val fileItem = getFileitemFromParcel(DELETE_FILE)
 
                     if(fileItem == null){
@@ -201,7 +204,7 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
     fun prepareNotificationManager(type: Type): WorkerNotification? {
         return when(type){
             Type.DOWNLOAD -> DownloadWorkerNotification(mContext)
-            else -> null
+            else -> DownloadWorkerNotification(mContext)
         }
     }
 
@@ -233,7 +236,7 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
                             ongoingNotificationID
                         ))
                     } catch (e: JSONException) {
-                        FLog.e(tag(), "Error: the offending line: $line")
+                        Log.e(tag(), "Error: the offending line: $line")
                         //FLog.e(TAG, "onHandleIntent: error reading json", e)
                     }
                 }
@@ -421,7 +424,7 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
 
 
     private fun log(message: String) {
-        Log.e("tag()", "EphemeralWorker: $message")
+        FLog.e(tag(), "EphemeralWorker: $message")
     }
 
     private fun getString(@StringRes resId: Int): String {
@@ -455,5 +458,18 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
         parcel.unmarshall(sourceParcelByteArray, 0, sourceParcelByteArray.size)
         parcel.setDataPosition(0)
         return FileItem.CREATOR.createFromParcel(parcel)
+    }
+    private fun getRemoteitemFromParcel(key: String): RemoteItem? {
+
+        val sourceParcelByteArray = inputData.getByteArray(key)
+        if(sourceParcelByteArray == null){
+            log("No valid target was passed!")
+            return null
+        }
+
+        val parcel = Parcel.obtain()
+        parcel.unmarshall(sourceParcelByteArray, 0, sourceParcelByteArray.size)
+        parcel.setDataPosition(0)
+        return RemoteItem.CREATOR.createFromParcel(parcel)
     }
 }

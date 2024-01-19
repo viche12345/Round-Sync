@@ -24,8 +24,7 @@ class EphemeralTaskManager(private var mContext: Context) {
 
             val data = Data.Builder()
             data.putString(EphemeralWorker.EPHEMERAL_TYPE, Type.DOWNLOAD.name)
-            data.putString(EphemeralWorker.REMOTE_ID, remote.name)
-            data.putString(EphemeralWorker.REMOTE_TYPE, remote.typeReadable)
+            addRemoteItemToData(EphemeralWorker.REMOTE, remote, data)
 
             data.putString(EphemeralWorker.DOWNLOAD_TARGETPATH, selectedPath)
 
@@ -41,8 +40,7 @@ class EphemeralTaskManager(private var mContext: Context) {
         ) {
             val data = Data.Builder()
             data.putString(EphemeralWorker.EPHEMERAL_TYPE, Type.UPLOAD.name)
-            data.putString(EphemeralWorker.REMOTE_ID, remote.name)
-            data.putString(EphemeralWorker.REMOTE_TYPE, remote.typeReadable)
+            addRemoteItemToData(EphemeralWorker.REMOTE, remote, data)
 
             data.putString(EphemeralWorker.UPLOAD_TARGETPATH, targetpath)
             data.putString(EphemeralWorker.UPLOAD_FILE, file)
@@ -59,8 +57,7 @@ class EphemeralTaskManager(private var mContext: Context) {
         ) {
             val data = Data.Builder()
             data.putString(EphemeralWorker.EPHEMERAL_TYPE, Type.MOVE.name)
-            data.putString(EphemeralWorker.REMOTE_ID, remote.name)
-            data.putString(EphemeralWorker.REMOTE_TYPE, remote.typeReadable)
+            addRemoteItemToData(EphemeralWorker.REMOTE, remote, data)
 
             addFileItemToData(EphemeralWorker.MOVE_FILE, file, data)
             data.putString(EphemeralWorker.MOVE_TARGETPATH, currentPath)
@@ -75,8 +72,7 @@ class EphemeralTaskManager(private var mContext: Context) {
         ) {
             val data = Data.Builder()
             data.putString(EphemeralWorker.EPHEMERAL_TYPE, Type.DELETE.name)
-            data.putString(EphemeralWorker.REMOTE_ID, remote.name)
-            data.putString(EphemeralWorker.REMOTE_TYPE, remote.typeReadable)
+            addRemoteItemToData(EphemeralWorker.REMOTE, remote, data)
 
             addFileItemToData(EphemeralWorker.DELETE_FILE, file, data)
             data.putString(EphemeralWorker.DELETE_PATH, currentPath)
@@ -86,6 +82,12 @@ class EphemeralTaskManager(private var mContext: Context) {
         private fun addFileItemToData(key: String, fileItem: FileItem, data: Data.Builder){
             val parcel = Parcel.obtain()
             fileItem.writeToParcel(parcel, 0)
+            data.putByteArray(key, parcel.marshall())
+        }
+
+        private fun addRemoteItemToData(key: String, remote: RemoteItem, data: Data.Builder){
+            val parcel = Parcel.obtain()
+            remote.writeToParcel(parcel, 0)
             data.putByteArray(key, parcel.marshall())
         }
     }
