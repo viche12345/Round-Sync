@@ -51,15 +51,13 @@
     <string name="replace_config_file_question">Replace the current configuration file?</string>
     <string name="config_file_lost_statement">Your current configuration will be lost</string>
     <string name="continue_statement">Continue</string>
-    <string name="download_complete">Download complete</string>
-    <string name="download_service_notification_description">File downloads</string>
+    <string name="worker_download_complete">Download complete</string>
     <string name="streaming_service_notification_title">Streaming Service</string>
     <string name="streaming_service_notification_content">Serving on http://127.0.0.1:%1$d</string>
     <string name="streaming_service_notification_channel_description">Streaming service</string>
     <string name="streaming_task_failed">Could not stream file</string>
     <string name="rcd_service_notification_channel_description">Background Service</string>
-    <string name="upload_complete">Upload complete</string>
-    <string name="upload_service_notification_channel_description">File uploads</string>
+    <string name="worker_upload_complete">Upload complete</string>
     <string name="remotes_toolbar_title">Remotes</string>
     <string name="fab_upload_files">Upload Files</string>
     <string name="fab_new_folder">New Folder</string>
@@ -107,8 +105,8 @@
     <string name="locked_configuration_password">Locked configuration password</string>
     <string name="configuration_is_password_protected">Configuration is password protected</string>
     <string name="press_to_unlock">Press to unlock</string>
-    <string name="download_failed">Download failed</string>
-    <string name="upload_failed">Upload failed</string>
+    <string name="worker_download_failed">Download failed</string>
+    <string name="worker_upload_failed">Upload failed</string>
     <string name="properties">Properties</string>
     <string name="open_as">Open as</string>
     <string name="open_as_text">Text</string>
@@ -179,7 +177,6 @@
     <string name="background_service_broadcast_data_remote" translatable="false">ca.pkay.rcexplorer.BACKGROUND_SERVICE_BROADCAST_DATA_REMOTE</string>
     <string name="background_service_broadcast_data_path" translatable="false">ca.pkay.rcexplorer.BACKGROUND_SERVICE_BROADCAST_DATA_PATH</string>
     <string name="background_service_broadcast_data_path2" translatable="false">ca.pkay.rcexplorer.BACKGROUND_SERVICE_BROADCAST_DATA_PATH2</string>
-    <string name="background_service_notification_channel_description">Background service for long running tasks like Move and Delete</string>
     <string name="sync_service_notification_channel_description">Background service for sync</string>
     <string name="moving_info">Moving…</string>
     <string name="deleting_info">Deleting…</string>
@@ -276,9 +273,9 @@
     <string name="select_sync_direction">Select sync direction</string>
     <string name="nav_drawer_pinned_header">Pinned</string>
     <string name="nav_header_options_header">Options</string>
-    <string name="download_cancelled">Download cancelled</string>
+    <string name="worker_download_cancelled">Download cancelled</string>
     <string name="wifi_connections_isnt_available">Wi-Fi connection isn\'t available</string>
-    <string name="upload_cancelled">Upload cancelled</string>
+    <string name="worker_upload_cancelled">Upload cancelled</string>
     <string name="logging_settings_header">Logging</string>
     <string name="look_and_feel_settings_icon_content_description">Look and Feel settings icon</string>
     <string name="general_settings_icon_content_description">General settings icon</string>
@@ -362,7 +359,7 @@
     <string name="edit">Edit</string>
     <string name="start_task">Start Task</string>
     <string name="copy_taskid">Copy TaskID</string>
-    <string name="task_copied_id_to_clipboard">Copied ID to clipboard!</string>
+    <string name="task_copied_id_to_clipboard">Copied ID "%s" to clipboard!</string>
     <string name="importer_unknown_error">Unknown error importing task!</string>
     <string name="sync_direction_copy_local_remote">Copy local to remote</string>
     <string name="sync_direction_copy_remote_local">Copy remote to local</string>
@@ -424,6 +421,24 @@
     <plurals name="modern_prettyprint_duration_s">
         <item quantity="one">%s Second</item>
         <item quantity="other">%s Seconds</item>
+    </plurals>
+    <plurals name="worker_deleting_success_message">
+        <item quantity="zero">Nothing was deleted.</item>
+        <item quantity="other">%s was deleted!</item>
+    </plurals>
+    <plurals name="worker_move_success_message">
+        <item quantity="zero">Nothing was moved.</item>
+        <item quantity="other">%s was moved!</item>
+    </plurals>
+    <plurals name="worker_download_success_message">
+        <item quantity="zero">Nothing was downloaded.</item>
+        <item quantity="one">%s File was downloaded!</item>
+        <item quantity="other">%s Files were downloaded!</item>
+    </plurals>
+    <plurals name="worker_upload_success_message">
+        <item quantity="zero">Nothing was uploaded.</item>
+        <item quantity="one">%s was uploaded!</item>
+        <item quantity="other">%s Files were uploaded!</item>
     </plurals>
 
     <string name="abi_not_supported_arm_downgrade">Unfortunately, this Round Sync version is not compatible with your device. Try the armeabi-v7a APK from github.com/newhinton/Round-Sync/releases/latest.</string>
@@ -560,4 +575,30 @@
     <string name="permissions_batteryoptimizations_label">Battery Optimizations</string>
     <string name="permissions_batteryoptimizations_description">If the device is asleep, your tasks might be delayed when this permission is not granted.</string>
     <string name="sync_service_notification_startingsync">Starting Sync...</string>
+    <string name="sync_service_notification_group">Group for Sync</string>
+    <string name="workernotification_group_description">Task Notifications</string>
+    <string name="download_service_ongoing_notification_title">Active Downloads</string>
+    <string name="download_service_ongoing_notification_description">This notification shows the progress of the current download</string>
+    <string name="download_service_success_notification_title">Successful Downloads</string>
+    <string name="download_service_success_notification_description">Successful Downloads will show a Message in this Channel</string>
+    <string name="download_service_failed_notification_description">Failed Downloads will show a Message in this Channel</string>
+    <string name="download_service_failed_notification_title">Failed Downloads</string>
+    <string name="upload_service_ongoing_notification_title">Active Uploads</string>
+    <string name="upload_service_ongoing_notification_description">This notification shows the progress of the current upload</string>
+    <string name="upload_service_success_notification_title">Successful Uploads</string>
+    <string name="upload_service_success_notification_description">Successful Uploads will show a Message in this Channel</string>
+    <string name="upload_service_failed_notification_description">Failed Uploads will show a Message in this Channel</string>
+    <string name="upload_service_failed_notification_title">Failed Uploads</string>
+    <string name="delete_service_notification_title">Deletions</string>
+    <string name="delete_service_notification_description">This notification shows deletions</string>
+    <string name="move_service_notification_title">Moves</string>
+    <string name="move_service_notification_description">This notification shows moves</string>
+    <string name="worker_deleting_initialtitle">Deleting…</string>
+    <string name="worker_deleting_success">Deleted!</string>
+    <string name="worker_deleting_failed">Failed to delete files or folders!</string>
+    <string name="worker_move_initialtitle">Moving…</string>
+    <string name="worker_move_failed">Move failed!</string>
+    <string name="worker_move_success">Move was successful!</string>
+    <string name="worker_download_initialtitle">Downloading…</string>
+    <string name="worker_upload_initialtitle">Uploading…</string>
 </resources>

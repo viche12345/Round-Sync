@@ -42,6 +42,7 @@ Visit [https://roundsync.com](https://roundsync.com) for more information!
 
 
 ## Installation
+
 Grab the [latest version](https://github.com/newhinton/Round-Sync/releases/latest) of the signed APK and install it on your phone.
 | CPU architecture | Where to find | APK identifier |
 |:---|:--|:---:|
@@ -63,7 +64,7 @@ The intent needs the following:
 
 | Intent          |                   Content                   |                 |
 |:----------------|:-------------------------------------------:|----------------:|
-| packageName     |           ca.pkay.rcloneexplorer            |                 |
+| packageName     |           de.felixnuesse.extract            |                 |
 | className       | ca.pkay.rcloneexplorer.Services.SyncService |                 |
 | Action          |                 START_TASK                  |                 |
 | Integer Extra   |                    task                     |        idOfTask |
@@ -86,6 +87,8 @@ The intent needs the following:
 See [CONTRIBUTING](./CONTRIBUTING.md)
 
 Anyone is welcome to contribute and help out. However, hate, discrimination and racism are decidedly unwelcome here. If you feel offended by this, you might belong to the group of people who are not welcome. I will not tolerate hate in any way.
+
+If you want to add more translations, see our [weblate-project](https://hosted.weblate.org/projects/round-sync/round-sync/)!
 
 
 ## License

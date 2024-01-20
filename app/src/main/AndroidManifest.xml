@@ -69,17 +69,9 @@
             </intent-filter>
         </provider>
 
-        <service android:name=".Services.DownloadService"
-            android:foregroundServiceType="dataSync" />
-        <service android:name=".Services.UploadService"
-            android:foregroundServiceType="dataSync" />
         <service android:name=".Services.StreamingService"
             android:foregroundServiceType="dataSync" />
         <service android:name=".Services.ThumbnailsLoadingService"
-            android:foregroundServiceType="dataSync" />
-        <service android:name=".Services.DeleteService"
-            android:foregroundServiceType="dataSync" />
-        <service android:name=".Services.MoveService"
             android:foregroundServiceType="dataSync" />
         <service
             android:name=".Services.TriggerService"
@@ -92,16 +84,18 @@
             android:name=".Services.ReportService"
             android:foregroundServiceType="dataSync" />
 
-        <!-- This is a default service required for any and all Workers. Do not remove.-->
+        <!-- Used to expose tasks to other apps, no other functionality-->
+        <service
+            android:name=".Services.SyncService"
+            android:exported="true">
+    </service>
+
+    <!-- This is a default service required for any and all Workers. Do not remove.-->
         <service
             android:name="androidx.work.impl.foreground.SystemForegroundService"
             android:foregroundServiceType="dataSync" />
 
-        <receiver android:name=".BroadcastReceivers.DownloadCancelAction" />
-        <receiver android:name=".BroadcastReceivers.UploadCancelAction" />
         <receiver android:name=".BroadcastReceivers.ServeCancelAction" />
-        <receiver android:name=".BroadcastReceivers.DeleteCancelAction" />
-        <receiver android:name=".BroadcastReceivers.MoveCancelAction" />
         <receiver android:name=".Services.RcdService$RcdServiceAction" />
         <receiver android:name=".Services.ReportService$StopCollectionReceiver" />
         <receiver

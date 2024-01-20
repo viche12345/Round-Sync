@@ -7,67 +7,68 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
 import android.net.wifi.WifiManager
+import android.os.Build
+import android.os.Parcel
 import androidx.annotation.StringRes
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.preference.PreferenceManager
 import androidx.work.ForegroundInfo
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import ca.pkay.rcloneexplorer.Database.DatabaseHandler
+import ca.pkay.rcloneexplorer.Items.FileItem
 import ca.pkay.rcloneexplorer.Items.RemoteItem
-import ca.pkay.rcloneexplorer.Items.Task
 import ca.pkay.rcloneexplorer.Log2File
 import ca.pkay.rcloneexplorer.R
 import ca.pkay.rcloneexplorer.Rclone
-import ca.pkay.rcloneexplorer.notifications.GenericSyncNotification
-import ca.pkay.rcloneexplorer.notifications.ReportNotifications
-import ca.pkay.rcloneexplorer.notifications.SyncServiceNotifications
-import ca.pkay.rcloneexplorer.notifications.SyncServiceNotifications.Companion.GROUP_ID
+import ca.pkay.rcloneexplorer.notifications.prototypes.WorkerNotification
 import ca.pkay.rcloneexplorer.notifications.support.StatusObject
 import ca.pkay.rcloneexplorer.util.FLog
 import ca.pkay.rcloneexplorer.util.SyncLog
 import ca.pkay.rcloneexplorer.util.WifiConnectivitiyUtil
-import kotlinx.serialization.json.Json
+import de.felixnuesse.extract.extensions.tag
+import de.felixnuesse.extract.notifications.implementations.DownloadWorkerNotification
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 import java.io.InterruptedIOException
-import java.util.Random
+import kotlin.random.Random
+import android.util.Log
+import de.felixnuesse.extract.notifications.implementations.DeleteWorkerNotification
+import de.felixnuesse.extract.notifications.implementations.MoveWorkerNotification
+import de.felixnuesse.extract.notifications.implementations.UploadWorkerNotification
 
-class SyncWorker (private var mContext: Context, workerParams: WorkerParameters): Worker(mContext, workerParams) {
+
+class EphemeralWorker (private var mContext: Context, workerParams: WorkerParameters): Worker(mContext, workerParams) {
+
 
     companion object {
-        const val TASK_ID = "TASK_ID"
-        const val TASK_EPHEMERAL = "TASK_EPHEMERAL"
-        private const val TAG = "SyncWorker"
+        const val EPHEMERAL_TYPE = "TASK_EPHEMERAL_TYPE"
+        const val REMOTE = "REMOTE"
 
-        //those Extras do not follow the above schema, because they are exposed to external applications
-        //That means shorter values make it easier to use. There is no other technical reason
-        const val TASK_SYNC_ACTION = "START_TASK"
-        const val TASK_CANCEL_ACTION = "CANCEL_TASK"
-        const val EXTRA_TASK_ID = "task"
+        const val DOWNLOAD_TARGETPATH = "DOWNLOAD_TARGETPATH"
+        const val DOWNLOAD_SOURCE = "DOWNLOAD_SOURCE"
 
-        // Todo: Allow SyncWorker to run in silent mode, or remove this!
-        const val EXTRA_TASK_SILENT = "notification"
+        const val UPLOAD_FILE = "UPLOAD_FILE"
+        const val UPLOAD_TARGETPATH = "UPLOAD_TARGETPATH"
+
+        const val MOVE_FILE = "MOVE_FILE"
+        const val MOVE_TARGETPATH = "MOVE_TARGETPATH"
+
+        const val DELETE_FILE = "DELETE_FILE"
     }
-
-
 
     internal enum class FAILURE_REASON {
         NO_FAILURE, NO_UNMETERED, NO_CONNECTION, RCLONE_ERROR, CONNECTIVITY_CHANGED, CANCELLED, NO_TASK
     }
 
     // Objects
-    private var mRclone = Rclone(mContext)
-    private var mDatabase = DatabaseHandler(mContext)
-    private var mNotificationManager = SyncServiceNotifications(mContext)
+    private var mNotificationManager: WorkerNotification? = null
     private val mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
 
 
     private var log2File: Log2File? = null
-
 
 
     // States
@@ -79,21 +80,16 @@ class SyncWorker (private var mContext: Context, workerParams: WorkerParameters)
     private var failureReason = FAILURE_REASON.NO_FAILURE
     private var endNotificationAlreadyPosted = false
     private var silentRun = false
-    private val ongoingNotificationID = Random().nextInt()
+    private val ongoingNotificationID = Random.nextInt()
 
 
-    // Task
-    private lateinit var mTask: Task
-    private var mTitle: String = mContext.getString(R.string.sync_service_notification_startingsync)
-
-
+    private var mTitle: String = mNotificationManager?.initialTitle ?: ""
 
     override fun doWork(): Result {
 
-        prepareNotifications()
         registerBroadcastReceivers()
 
-        updateForegroundNotification(mNotificationManager.updateSyncNotification(
+        updateForegroundNotification(mNotificationManager?.updateNotification(
             mTitle,
             mTitle,
             ArrayList(),
@@ -101,36 +97,86 @@ class SyncWorker (private var mContext: Context, workerParams: WorkerParameters)
             ongoingNotificationID
         ))
 
+        if (inputData.keyValueMap.containsKey(EPHEMERAL_TYPE)){
+            val type = Type.valueOf(inputData.getString(EPHEMERAL_TYPE) ?: "")
+            mNotificationManager = prepareNotificationManager(type)
 
-        var ephemeralTask: Task? = null
+            val remoteItem = getRemoteitemFromParcel(REMOTE)
+            if(remoteItem == null){
+                log("$REMOTE: No valid remote was passed!")
+                return Result.failure()
+            }
 
-        if(inputData.keyValueMap.containsKey(TASK_ID)){
-            val id = inputData.getLong(TASK_ID, -1)
-            ephemeralTask = mDatabase.getTask(id)
-        }
+            when(type){
+                Type.DOWNLOAD -> {
+                    val target = inputData.getString(DOWNLOAD_TARGETPATH)
+                    val fileItem = getFileitemFromParcel(DOWNLOAD_SOURCE)
 
-        if(inputData.keyValueMap.containsKey(TASK_EPHEMERAL)){
-            val taskString = inputData.getString(TASK_EPHEMERAL) ?: ""
-            if(taskString.isNotEmpty()) {
-                try {
-                    ephemeralTask = Json.decodeFromString<Task>(taskString)
-                } catch (e: Exception) {
-                    log("Could not deserialize")
+                    if(fileItem == null){
+                        log("$DOWNLOAD_SOURCE: No valid target was passed!")
+                        return Result.failure()
+                    }
+
+                    sRcloneProcess = Rclone(mContext).downloadFile(
+                        remoteItem,
+                        fileItem,
+                        target
+                    )
+                }
+                Type.UPLOAD -> {
+                    val target = inputData.getString(UPLOAD_TARGETPATH)
+                    val file = inputData.getString(UPLOAD_FILE)
+
+                    sRcloneProcess = Rclone(mContext).uploadFile(
+                        remoteItem,
+                        target,
+                        file
+                    )
+                }
+                Type.MOVE -> {
+                    val target = inputData.getString(MOVE_TARGETPATH)
+                    val fileItem = getFileitemFromParcel(MOVE_FILE)
+
+                    if(fileItem == null){
+                        log("$MOVE_FILE: No valid target was passed!")
+                        return Result.failure()
+                    }
+
+                    sRcloneProcess = Rclone(mContext).moveTo(
+                        remoteItem,
+                        fileItem,
+                        target
+                    )
+                }
+                Type.DELETE -> {
+                    val fileItem = getFileitemFromParcel(DELETE_FILE)
+
+                    if(fileItem == null){
+                        log("$DELETE_FILE: No valid target was passed!")
+                        return Result.failure()
+                    }
+
+                    sRcloneProcess = Rclone(mContext).deleteItems(
+                        remoteItem,
+                        fileItem
+                    )
                 }
             }
-        }
 
-        if (ephemeralTask != null) {
-            mTask = ephemeralTask
-            handleTask()
-            postSync()
-        } else {
-            postSync()
-            return Result.failure()
-        }
+            mNotificationManager?.setCancelId(id)
+            if(preconditionsMet()) {
+                handleSync(mTitle)
+                postSync()
+            } else {
+                log("Preconditions are not met!")
+                return Result.failure()
+            }
 
-        // Indicate whether the work finished successfully with the Result
-        return Result.success()
+            // Indicate whether the work finished successfully with the Result
+            return Result.success()
+        }
+        log("Critical: No valid ephemeral type passed!")
+        return Result.failure()
     }
 
     override fun onStopped() {
@@ -147,29 +193,16 @@ class SyncWorker (private var mContext: Context, workerParams: WorkerParameters)
         postSync()
     }
 
-    private fun handleTask() {
-        mTitle = mTask.title
-        mNotificationManager.setCancelId(id)
-        val remoteItem = RemoteItem(mTask.remoteId, mTask.remoteType, "")
-
-        if (mTask.title == "") {
-            mTitle = mTask.remotePath
-        }
-        if(arePreconditionsMet()) {
-            sRcloneProcess = mRclone.sync(
-                remoteItem,
-                mTask.localPath,
-                mTask.remotePath,
-                mTask.direction,
-                mTask.md5sum
-            )
-            handleSync(mTitle)
-            sendUploadFinishedBroadcast(remoteItem.name, mTask.remotePath)
+    fun prepareNotificationManager(type: Type): WorkerNotification {
+        return when(type){
+            Type.DOWNLOAD -> DownloadWorkerNotification(mContext)
+            Type.UPLOAD -> UploadWorkerNotification(mContext)
+            Type.DELETE -> DeleteWorkerNotification(mContext)
+            Type.MOVE -> MoveWorkerNotification(mContext)
         }
     }
 
     private fun handleSync(title: String) {
-        SyncLog.info(mContext, mTitle, mContext.getString(R.string.operation_start_sync))
         if (sRcloneProcess != null) {
             val localProcessReference = sRcloneProcess!!
             try {
@@ -189,7 +222,7 @@ class SyncWorker (private var mContext: Context, workerParams: WorkerParameters)
                             statusObject.parseLoglineToStatusObject(logline)
                         }
 
-                        updateForegroundNotification(mNotificationManager.updateSyncNotification(
+                        updateForegroundNotification(mNotificationManager?.updateNotification(
                             title,
                             statusObject.notificationContent,
                             statusObject.notificationBigText,
@@ -197,24 +230,24 @@ class SyncWorker (private var mContext: Context, workerParams: WorkerParameters)
                             ongoingNotificationID
                         ))
                     } catch (e: JSONException) {
-                        FLog.e(TAG, "SyncService-Error: the offending line: $line")
+                        Log.e(tag(), "Error: the offending line: $line")
                         //FLog.e(TAG, "onHandleIntent: error reading json", e)
                     }
                 }
             } catch (e: InterruptedIOException) {
-                FLog.e(TAG, "onHandleIntent: I/O interrupted, stream closed", e)
+                FLog.e(tag(), "onHandleIntent: I/O interrupted, stream closed", e)
             } catch (e: IOException) {
-                FLog.e(TAG, "onHandleIntent: error reading stdout", e)
+                FLog.e(tag(), "onHandleIntent: error reading stdout", e)
             }
             try {
                 localProcessReference.waitFor()
             } catch (e: InterruptedException) {
-                FLog.e(TAG, "onHandleIntent: error waiting for process", e)
+                FLog.e(tag(), "onHandleIntent: error waiting for process", e)
             }
         } else {
             log("Sync: No Rclone Process!")
         }
-        mNotificationManager.cancelSyncNotification(ongoingNotificationID)
+        mNotificationManager?.cancelSyncNotification(ongoingNotificationID)
     }
 
     private fun postSync() {
@@ -259,19 +292,24 @@ class SyncWorker (private var mContext: Context, workerParams: WorkerParameters)
     }
 
     private fun showCancelledNotification(notificationId: Int) {
-        SyncLog.info(mContext, mTitle, mContext.getString(R.string.operation_failed_cancelled))
-        mNotificationManager.showCancelledNotificationOrReport(
+        val content = mContext.getString(R.string.operation_failed_cancelled)
+        SyncLog.info(mContext, mTitle, content)
+        mNotificationManager?.showCancelledNotification(
             mTitle,
+            content,
             notificationId,
-            mTask.id
+            0
         )
     }
 
     private fun showSuccessNotification(notificationId: Int) {
         //Todo: Show sync-errors in notification. Also see line 169
+        //Todo: This should be context dependend on the type. It is currently not!
 
-        var message = generateSuccessMessage(statusObject)
-        mNotificationManager.showSuccessNotificationOrReport(
+
+        var message = mNotificationManager?.generateSuccessMessage(statusObject, getCurrentFile())?: "error"
+
+        mNotificationManager?.showSuccessNotification(
             mTitle,
             message,
             notificationId
@@ -282,34 +320,7 @@ class SyncWorker (private var mContext: Context, workerParams: WorkerParameters)
         Est. Speed: ${statusObject.getEstimatedAverageSpeed()}
         Avg. Speed: ${statusObject.getLastItemAverageSpeed()}
                         """.trimIndent()
-        SyncLog.info(mContext, mContext.getString(R.string.operation_success, mTitle), message)
-    }
-
-    // this is currently only a useless mapper. It is supposed to keep this worker in sync with the ephemeral one.
-    // when they are merged eventually, this can be easily extracted.
-    private fun generateSuccessMessage(statusObject: StatusObject): String {
-        var message = mContext.resources.getQuantityString(
-                R.plurals.operation_success_description,
-                statusObject.getTotalTransfers(),
-                mTitle,
-                statusObject.getTotalSize(),
-                statusObject.getTotalTransfers()
-        )
-        if (statusObject.getTotalTransfers() == 0) {
-            message = mContext.resources.getString(R.string.operation_success_description_zero)
-        }
-        if (statusObject.getDeletions() > 0) {
-            message += """
-                        
-                        ${
-                mContext.getString(
-                        R.string.operation_success_description_deletions_prefix,
-                        statusObject.getDeletions()
-                )
-            }
-                        """.trimIndent()
-        }
-        return message
+        //SyncLog.info(mContext, mContext.getString(R.string.operation_success, mTitle), message)
     }
 
     private fun showFailNotification(notificationId: Int, content: String, wasCancelled: Boolean = false) {
@@ -331,17 +342,17 @@ class SyncWorker (private var mContext: Context, workerParams: WorkerParameters)
             notifyTitle = mContext.getString(R.string.operation_failed_cancelled)
         }
         SyncLog.error(mContext, notifyTitle, "$mTitle: $text")
-        mNotificationManager.showFailedNotificationOrReport(
+        mNotificationManager?.showFailedNotification(
             mTitle,
             text,
             notificationId,
-            mTask.id
+           0
         )
     }
 
-    private fun arePreconditionsMet(): Boolean {
+    private fun preconditionsMet(): Boolean {
         val connection = WifiConnectivitiyUtil.dataConnection(this.applicationContext)
-        if (mTask.wifionly && connection === WifiConnectivitiyUtil.Connection.METERED) {
+        if (connection === WifiConnectivitiyUtil.Connection.METERED) {
             failureReason = FAILURE_REASON.NO_UNMETERED
             return false
         } else if (connection === WifiConnectivitiyUtil.Connection.DISCONNECTED || connection === WifiConnectivitiyUtil.Connection.NOT_AVAILABLE) {
@@ -350,39 +361,6 @@ class SyncWorker (private var mContext: Context, workerParams: WorkerParameters)
         }
 
         return true
-    }
-
-    private fun prepareNotifications() {
-
-        GenericSyncNotification(mContext).setNotificationChannel(
-                SyncServiceNotifications.CHANNEL_ID,
-                getString(R.string.sync_service_notification_channel_title),
-                getString(R.string.sync_service_notification_channel_description),
-                GROUP_ID,
-                getString(R.string.sync_service_notification_group)
-        )
-        GenericSyncNotification(mContext).setNotificationChannel(
-            SyncServiceNotifications.CHANNEL_SUCCESS_ID,
-            getString(R.string.sync_service_notification_channel_success_title),
-            getString(R.string.sync_service_notification_channel_success_description),
-                GROUP_ID,
-                getString(R.string.sync_service_notification_group)
-        )
-        GenericSyncNotification(mContext).setNotificationChannel(
-            SyncServiceNotifications.CHANNEL_FAIL_ID,
-            getString(R.string.sync_service_notification_channel_fail_title),
-            getString(R.string.sync_service_notification_channel_fail_description),
-                GROUP_ID,
-                getString(R.string.sync_service_notification_group)
-        )
-        GenericSyncNotification(mContext).setNotificationChannel(
-            ReportNotifications.CHANNEL_REPORT_ID,
-            getString(R.string.sync_service_notification_channel_report_title),
-            getString(R.string.sync_service_notification_channel_report_description),
-                GROUP_ID,
-                getString(R.string.sync_service_notification_group)
-        )
-
     }
 
     private fun sendUploadFinishedBroadcast(remote: String, path: String?) {
@@ -396,18 +374,25 @@ class SyncWorker (private var mContext: Context, workerParams: WorkerParameters)
     // Creates an instance of ForegroundInfo which can be used to update the
     // ongoing notification.
     private fun updateForegroundNotification(notification: Notification?) {
-        notification?.let {
-            setForegroundAsync(ForegroundInfo(ongoingNotificationID, it, FOREGROUND_SERVICE_TYPE_DATA_SYNC))
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            notification?.let {
+                setForegroundAsync(ForegroundInfo(ongoingNotificationID, it, FOREGROUND_SERVICE_TYPE_DATA_SYNC))
+            }
         }
     }
 
 
     private fun log(message: String) {
-        FLog.e(TAG, "SyncWorker: $message")
+        FLog.e(tag(), "EphemeralWorker: $message")
     }
 
-    private fun getString(@StringRes resId: Int): String {
-        return mContext.getString(resId)
+    private fun getString(@StringRes resId: Int?): String {
+        return if (resId == null) {
+            "Error"
+        } else {
+            mContext.getString(resId)
+        }
     }
 
     private fun registerBroadcastReceivers() {
@@ -425,4 +410,60 @@ class SyncWorker (private var mContext: Context, workerParams: WorkerParameters)
             }
         }
 
+    private fun getFileitemFromParcel(key: String): FileItem {
+
+        val sourceParcelByteArray = inputData.getByteArray(key)
+        if(sourceParcelByteArray == null){
+            log("No valid target was passed!")
+            throw NullPointerException("The passed FileItem was null. We cannot continue!")
+        }
+
+        val parcel = Parcel.obtain()
+        parcel.unmarshall(sourceParcelByteArray, 0, sourceParcelByteArray.size)
+        parcel.setDataPosition(0)
+        return FileItem.CREATOR.createFromParcel(parcel)
+    }
+
+    private fun getRemoteitemFromParcel(key: String): RemoteItem? {
+
+        val sourceParcelByteArray = inputData.getByteArray(key)
+        if(sourceParcelByteArray == null){
+            log("No valid target was passed!")
+            return null
+        }
+
+        val parcel = Parcel.obtain()
+        parcel.unmarshall(sourceParcelByteArray, 0, sourceParcelByteArray.size)
+        parcel.setDataPosition(0)
+        return RemoteItem.CREATOR.createFromParcel(parcel)
+    }
+
+    private fun getCurrentFile(): FileItem {
+        return when(Type.valueOf(inputData.getString(EPHEMERAL_TYPE)?:Type.DOWNLOAD.name)){
+            Type.DOWNLOAD -> {
+                getFileitemFromParcel(DOWNLOAD_SOURCE)
+            }
+            Type.UPLOAD -> {
+                val pathAndName = inputData.getString(UPLOAD_FILE) ?: ""
+                val name = pathAndName.substring(pathAndName.lastIndexOf("/")+1, pathAndName.length)
+                val path = pathAndName.substring(0, pathAndName.lastIndexOf("/")+1)
+                // TODO: Make this work properly! All the params are guessed!
+                FileItem(
+                        RemoteItem("", ""),
+                        path,
+                        name,
+                        0L,
+                        "modTime",
+                        "mimeType",
+                        false,
+                        false)
+            }
+            Type.MOVE -> {
+                getFileitemFromParcel(MOVE_FILE)
+            }
+            Type.DELETE -> {
+                getFileitemFromParcel(DELETE_FILE)
+            }
+        }
+    }
 }

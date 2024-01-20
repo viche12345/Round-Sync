@@ -85,15 +85,12 @@ import ca.pkay.rcloneexplorer.Items.Task;
 import ca.pkay.rcloneexplorer.R;
 import ca.pkay.rcloneexplorer.Rclone;
 import ca.pkay.rcloneexplorer.RecyclerViewAdapters.FileExplorerRecyclerViewAdapter;
-import ca.pkay.rcloneexplorer.Services.DeleteService;
-import ca.pkay.rcloneexplorer.Services.DownloadService;
-import ca.pkay.rcloneexplorer.Services.MoveService;
 import ca.pkay.rcloneexplorer.Services.StreamingService;
 import ca.pkay.rcloneexplorer.Services.ThumbnailsLoadingService;
-import ca.pkay.rcloneexplorer.Services.UploadService;
 import ca.pkay.rcloneexplorer.util.ActivityHelper;
 import ca.pkay.rcloneexplorer.util.FLog;
 import ca.pkay.rcloneexplorer.util.LargeParcel;
+import ca.pkay.rcloneexplorer.workmanager.EphemeralTaskManager;
 import ca.pkay.rcloneexplorer.workmanager.SyncManager;
 import de.felixnuesse.ui.BreadcrumbView;
 import es.dmoral.toasty.Toasty;
@@ -551,11 +548,7 @@ public class FileExplorerFragment extends Fragment implements   FileExplorerRecy
             }
 
             for (String uploadFile : uploadList) {
-                Intent intent = new Intent(getContext(), UploadService.class);
-                intent.putExtra(UploadService.LOCAL_PATH_ARG, uploadFile);
-                intent.putExtra(UploadService.UPLOAD_PATH_ARG, directoryObject.getCurrentPath());
-                intent.putExtra(UploadService.REMOTE_ARG, remote);
-                tryStartService(context, intent);
+                EphemeralTaskManager.Companion.queueUpload(this.context, remote, uploadFile, directoryObject.getCurrentPath());
             }
         } else if (requestCode == FILE_PICKER_DOWNLOAD_RESULT) {
             if (resultCode != FragmentActivity.RESULT_OK) {
@@ -566,11 +559,7 @@ public class FileExplorerFragment extends Fragment implements   FileExplorerRecy
             recyclerViewAdapter.cancelSelection();
 
             for (FileItem downloadItem : downloadList) {
-                Intent intent = new Intent(getContext(), DownloadService.class);
-                intent.putExtra(DownloadService.DOWNLOAD_ITEM_ARG, downloadItem);
-                intent.putExtra(DownloadService.DOWNLOAD_PATH_ARG, selectedPath);
-                intent.putExtra(DownloadService.REMOTE_ARG, remote);
-                tryStartService(context, intent);
+                EphemeralTaskManager.Companion.queueDownload(this.context, remote, downloadItem, selectedPath);
             }
             downloadList.clear();
         } else if (requestCode == FILE_PICKER_SYNC_RESULT && resultCode == FragmentActivity.RESULT_OK) {
@@ -963,12 +952,7 @@ public class FileExplorerFragment extends Fragment implements   FileExplorerRecy
             path2 = "//" + remoteName;
         }
         for (FileItem moveItem : moveList) {
-            Intent intent = new Intent(context, MoveService.class);
-            intent.putExtra(MoveService.REMOTE_ARG, remote);
-            intent.putExtra(MoveService.MOVE_DEST_PATH, directoryObject.getCurrentPath());
-            intent.putExtra(MoveService.MOVE_ITEM, moveItem);
-            intent.putExtra(MoveService.PATH, path2);
-            tryStartService(context, intent);
+            EphemeralTaskManager.Companion.queueMove(this.context, remote, directoryObject.getCurrentPath(), moveItem, path2);
         }
         Toasty.info(context, getString(R.string.moving_info), Toast.LENGTH_SHORT, true).show();
         moveList.clear();
@@ -1480,11 +1464,7 @@ public class FileExplorerFragment extends Fragment implements   FileExplorerRecy
                 .setPositiveButton(getResources().getString(R.string.delete), (dialog, which) -> {
                     recyclerViewAdapter.cancelSelection();
                     for (FileItem deleteItem : deleteList) {
-                        Intent intent = new Intent(context, DeleteService.class);
-                        intent.putExtra(DeleteService.REMOTE_ARG, remote);
-                        intent.putExtra(DeleteService.DELETE_ITEM, deleteItem);
-                        intent.putExtra(DeleteService.PATH, directoryObject.getCurrentPath());
-                        tryStartService(context, intent);
+                        EphemeralTaskManager.Companion.queueDelete(this.context, remote, deleteItem, directoryObject.getCurrentPath());
                     }
                     Toasty.info(context, getString(R.string.deleting_info), Toast.LENGTH_SHORT, true).show();
                 });

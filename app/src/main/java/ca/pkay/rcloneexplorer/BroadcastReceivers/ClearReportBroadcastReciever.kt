@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.datastore.preferences.core.edit
 import ca.pkay.rcloneexplorer.notifications.ReportNotifications
-import ca.pkay.rcloneexplorer.notifications.SyncServiceNotifications
 import ca.pkay.rcloneexplorer.notifications.dataStore
 import kotlinx.coroutines.runBlocking
 

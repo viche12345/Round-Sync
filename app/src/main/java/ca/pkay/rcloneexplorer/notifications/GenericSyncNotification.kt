@@ -1,6 +1,7 @@
 package ca.pkay.rcloneexplorer.notifications
 
 import android.app.NotificationChannel
+import android.app.NotificationChannelGroup
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_IMMUTABLE
@@ -58,7 +59,7 @@ class GenericSyncNotification(var mContext: Context) {
 
     }
 
-    fun setNotificationChannel(channelID: String, channelName: String, description: String) {
+    fun setNotificationChannel(channelID: String, channelName: String, description: String, groupID: String, groupDescription: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create the NotificationChannel, but only on API 26+ because
             // the NotificationChannel class is new and not in the support library
@@ -66,6 +67,8 @@ class GenericSyncNotification(var mContext: Context) {
             channel.description = description
             // Register the channel with the system
             val notificationManager = mContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannelGroup(NotificationChannelGroup(groupID, groupDescription))
+            channel.group = groupID
             notificationManager.createNotificationChannel(channel)
         }
     }

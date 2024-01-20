@@ -54,7 +54,11 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
             }
             String timeFormattedHuman = DateUtils.getRelativeTimeSpanString(timestamp).toString();
 
-            holder.logtitle.setText(selectedTrigger.getString(SyncLog.TITLE));
+            String text = selectedTrigger.getString(SyncLog.TITLE);
+            holder.logtitle.setText(text);
+            holder.logtitle.setOnClickListener(v -> {
+                Toasty.info(v.getContext(), text).show();
+            });
             holder.logdetails.setText(selectedTrigger.getString(SyncLog.CONTENT));
             holder.logdate.setText(timeFormattedHuman);
 
@@ -64,6 +68,7 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
             holder.log_item_frame.setOnClickListener(v -> {
                 Toasty.info(v.getContext(), timeFormattedFullFinal).show();
             });
+
 
             Context c = holder.view.getContext();
             switch (selectedTrigger.getInt(SyncLog.TYPE)){

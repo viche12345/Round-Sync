@@ -24,6 +24,7 @@ class SyncServiceNotifications(var mContext: Context) {
         const val CHANNEL_SUCCESS_ID = "ca.pkay.rcexplorer.sync_service_success"
         const val CHANNEL_FAIL_ID = "ca.pkay.rcexplorer.sync_service_fail"
 
+        const val GROUP_ID = "ca.pkay.rcexplorer.sync_service.group"
 
         const val PERSISTENT_NOTIFICATION_ID_FOR_SYNC = 162
         const val CANCEL_ID_NOTSET = "CANCEL_ID_NOTSET"

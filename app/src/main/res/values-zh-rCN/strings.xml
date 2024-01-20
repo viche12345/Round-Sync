@@ -44,15 +44,13 @@
     <string name="replace_config_file_question">替换当前的配置文件?</string>
     <string name="config_file_lost_statement">您当前的配置将丢失</string>
     <string name="continue_statement">继续</string>
-    <string name="download_complete">下载完成</string>
-    <string name="download_service_notification_description">下载通知</string>
+    <string name="worker_download_complete">下载完成</string>
     <string name="streaming_service_notification_title">串流服务</string>
     <string name="streaming_service_notification_content">服务打开在端口 %1$d</string>
     <string name="streaming_service_notification_channel_description">串流服务通知</string>
     <string name="streaming_task_failed">无法流式传输文件</string>
     <string name="rcd_service_notification_channel_description">核心服务通知</string>
-    <string name="upload_complete">上传完成</string>
-    <string name="upload_service_notification_channel_description">上传通知</string>
+    <string name="worker_upload_complete">上传完成</string>
     <string name="remotes_toolbar_title">远端</string>
     <string name="fab_upload_files">上传文件</string>
     <string name="fab_new_folder">新建文件夹</string>
@@ -98,8 +96,8 @@
     <string name="locked_configuration_password">锁定的配置密码</string>
     <string name="configuration_is_password_protected">配置受密码保护</string>
     <string name="press_to_unlock">按下解锁</string>
-    <string name="download_failed">下载失败</string>
-    <string name="upload_failed">上传失败</string>
+    <string name="worker_download_failed">下载失败</string>
+    <string name="worker_upload_failed">上传失败</string>
     <string name="properties">属性</string>
     <string name="open_as">打开方式</string>
     <string name="open_as_text">文本</string>
@@ -142,7 +140,6 @@
     <string name="app_not_configured">Round Sync 尚未配置</string>
     <string name="open_app_to_configure">请先打开应用进行设置</string>
     <string name="error_retrieving_files">检索文件时出错</string>
-    <string name="background_service_notification_channel_description">用于移动和删除等长期运行任务的后台服务</string>
     <string name="sync_service_notification_channel_description">用于同步服务</string>
     <string name="moving_info">移动中…</string>
     <string name="deleting_info">删除中…</string>
@@ -228,9 +225,9 @@
     <string name="select_sync_direction">选择同步方向</string>
     <string name="nav_drawer_pinned_header">收藏</string>
     <string name="nav_header_options_header">选项</string>
-    <string name="download_cancelled">下载已取消</string>
+    <string name="worker_download_cancelled">下载已取消</string>
     <string name="wifi_connections_isnt_available">无线网络连接不可用</string>
-    <string name="upload_cancelled">上传已取消</string>
+    <string name="worker_upload_cancelled">上传已取消</string>
     <string name="logging_settings_header">错误日志</string>
     <string name="look_and_feel_settings_icon_content_description">外观设置图标</string>
     <string name="general_settings_icon_content_description">常规设置图标</string>
@@ -307,7 +304,7 @@
     <string name="edit">编辑</string>
     <string name="start_task">启动任务</string>
     <string name="copy_taskid">复制任务ID</string>
-    <string name="task_copied_id_to_clipboard">已将ID复制到剪贴板！</string>
+    <string name="task_copied_id_to_clipboard">已将ID%s复制到剪贴板！</string>
     <string name="importer_unknown_error">导入任务时出现未知错误！</string>
     <string name="sync_direction_copy_local_remote">复制本地到远端</string>
     <string name="sync_direction_copy_remote_local">复制远端到本地</string>

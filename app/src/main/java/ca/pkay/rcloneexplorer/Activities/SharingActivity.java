@@ -36,9 +36,9 @@ import ca.pkay.rcloneexplorer.Items.RemoteItem;
 import ca.pkay.rcloneexplorer.R;
 import ca.pkay.rcloneexplorer.Rclone;
 import ca.pkay.rcloneexplorer.RuntimeConfiguration;
-import ca.pkay.rcloneexplorer.Services.UploadService;
 import ca.pkay.rcloneexplorer.util.ActivityHelper;
 import ca.pkay.rcloneexplorer.util.FLog;
+import ca.pkay.rcloneexplorer.workmanager.EphemeralTaskManager;
 import es.dmoral.toasty.Toasty;
 
 public class SharingActivity extends AppCompatActivity implements ShareRemotesFragment.OnRemoteClickListener,
@@ -190,11 +190,7 @@ public class SharingActivity extends AppCompatActivity implements ShareRemotesFr
             Dialogs.dismissSilently(loadingDialog);
 
             for (String uploadFile : uploadList) {
-                Intent intent = new Intent(context, UploadService.class);
-                intent.putExtra(UploadService.LOCAL_PATH_ARG, uploadFile);
-                intent.putExtra(UploadService.UPLOAD_PATH_ARG, path);
-                intent.putExtra(UploadService.REMOTE_ARG, remote);
-                tryStartService(context, intent);
+                EphemeralTaskManager.Companion.queueUpload(this.context, remote, uploadFile, path);
             }
             finish();
         }
