@@ -267,28 +267,8 @@ class SyncWorker (private var mContext: Context, workerParams: WorkerParameters)
 
     private fun showSuccessNotification(notificationId: Int) {
         //Todo: Show sync-errors in notification. Also see line 169
-        var message = mContext.resources.getQuantityString(
-            R.plurals.operation_success_description,
-            statusObject.getTotalTransfers(),
-            mTitle,
-            statusObject.getTotalSize(),
-            statusObject.getTotalTransfers()
-        )
-        if (statusObject.getTotalTransfers() == 0) {
-            message = mContext.resources.getString(R.string.operation_success_description_zero)
-        }
-        if (statusObject.getDeletions() > 0) {
-            message += """
-                        
-                        ${
-                mContext.getString(
-                    R.string.operation_success_description_deletions_prefix,
-                    statusObject.getDeletions()
-                )
-            }
-                        """.trimIndent()
-        }
 
+        var message = generateSuccessMessage(statusObject)
         mNotificationManager.showSuccessNotificationOrReport(
             mTitle,
             message,
@@ -301,6 +281,33 @@ class SyncWorker (private var mContext: Context, workerParams: WorkerParameters)
         Avg. Speed: ${statusObject.getLastItemAverageSpeed()}
                         """.trimIndent()
         SyncLog.info(mContext, mContext.getString(R.string.operation_success, mTitle), message)
+    }
+
+    // this is currently only a useless mapper. It is supposed to keep this worker in sync with the ephemeral one.
+    // when they are merged eventually, this can be easily extracted.
+    private fun generateSuccessMessage(statusObject: StatusObject): String {
+        var message = mContext.resources.getQuantityString(
+                R.plurals.operation_success_description,
+                statusObject.getTotalTransfers(),
+                mTitle,
+                statusObject.getTotalSize(),
+                statusObject.getTotalTransfers()
+        )
+        if (statusObject.getTotalTransfers() == 0) {
+            message = mContext.resources.getString(R.string.operation_success_description_zero)
+        }
+        if (statusObject.getDeletions() > 0) {
+            message += """
+                        
+                        ${
+                mContext.getString(
+                        R.string.operation_success_description_deletions_prefix,
+                        statusObject.getDeletions()
+                )
+            }
+                        """.trimIndent()
+        }
+        return message
     }
 
     private fun showFailNotification(notificationId: Int, content: String, wasCancelled: Boolean = false) {

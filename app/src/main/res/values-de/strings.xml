@@ -43,12 +43,12 @@
     <string name="replace_config_file_question">Aktuelle Konfigurationsdatei ersetzen?</string>
     <string name="config_file_lost_statement">Die aktuelle Konfiguration wird ersetzt!</string>
     <string name="continue_statement">Weiter</string>
-    <string name="download_complete">Download abgeschlossen</string>
+    <string name="worker_download_complete">Download abgeschlossen</string>
     <string name="streaming_service_notification_title">Streaming-Dienst</string>
     <string name="streaming_service_notification_content">Streaming-Server auf http://127.0.0.1:%1$d</string>
     <string name="streaming_service_notification_channel_description">Streaming-Dienst</string>
     <string name="streaming_task_failed">Laden der Datei fehlgeschlagen</string>
-    <string name="upload_complete">Upload abgeschlossen</string>
+    <string name="worker_upload_complete">Upload abgeschlossen</string>
     <string name="remotes_toolbar_title">Remotes</string>
     <string name="fab_upload_files">Dateien hochladen</string>
     <string name="fab_new_folder">Neuer Ordner</string>
@@ -90,8 +90,8 @@
     <string name="locked_configuration_password">Symbol Konfiguration verschlüsselt</string>
     <string name="configuration_is_password_protected">Konfigurationsdatei ist passwortgeschützt</string>
     <string name="press_to_unlock">Zum Entsperren drücken</string>
-    <string name="download_failed">Download fehlgeschlagenen</string>
-    <string name="upload_failed">Hochladen fehlgeschlagen</string>
+    <string name="worker_download_failed">Download fehlgeschlagenen</string>
+    <string name="worker_upload_failed">Hochladen fehlgeschlagen</string>
     <string name="properties">Eigenschaften</string>
     <string name="open_as">Öffnen als…</string>
     <string name="open_as_text">Text</string>
@@ -212,9 +212,9 @@
     <string name="select_sync_direction">Sync-Richtung auswählen</string>
     <string name="nav_drawer_pinned_header">Angeheftet</string>
     <string name="nav_header_options_header">Optionen</string>
-    <string name="download_cancelled">Download abgebrochen</string>
+    <string name="worker_download_cancelled">Download abgebrochen</string>
     <string name="wifi_connections_isnt_available">WLAN-Verbindung nicht verfügbar</string>
-    <string name="upload_cancelled">Hochladen abgebrochen</string>
+    <string name="worker_upload_cancelled">Hochladen abgebrochen</string>
     <string name="logging_settings_header">Protokollierung</string>
     <string name="look_and_feel_settings_icon_content_description">Erscheinungsbild</string>
     <string name="general_settings_icon_content_description">Allgemeine Einstellungen-Symbol</string>

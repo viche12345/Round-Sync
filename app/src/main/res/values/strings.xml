@@ -51,13 +51,13 @@
     <string name="replace_config_file_question">Replace the current configuration file?</string>
     <string name="config_file_lost_statement">Your current configuration will be lost</string>
     <string name="continue_statement">Continue</string>
-    <string name="download_complete">Download complete</string>
+    <string name="worker_download_complete">Download complete</string>
     <string name="streaming_service_notification_title">Streaming Service</string>
     <string name="streaming_service_notification_content">Serving on http://127.0.0.1:%1$d</string>
     <string name="streaming_service_notification_channel_description">Streaming service</string>
     <string name="streaming_task_failed">Could not stream file</string>
     <string name="rcd_service_notification_channel_description">Background Service</string>
-    <string name="upload_complete">Upload complete</string>
+    <string name="worker_upload_complete">Upload complete</string>
     <string name="remotes_toolbar_title">Remotes</string>
     <string name="fab_upload_files">Upload Files</string>
     <string name="fab_new_folder">New Folder</string>
@@ -105,8 +105,8 @@
     <string name="locked_configuration_password">Locked configuration password</string>
     <string name="configuration_is_password_protected">Configuration is password protected</string>
     <string name="press_to_unlock">Press to unlock</string>
-    <string name="download_failed">Download failed</string>
-    <string name="upload_failed">Upload failed</string>
+    <string name="worker_download_failed">Download failed</string>
+    <string name="worker_upload_failed">Upload failed</string>
     <string name="properties">Properties</string>
     <string name="open_as">Open as</string>
     <string name="open_as_text">Text</string>
@@ -273,9 +273,9 @@
     <string name="select_sync_direction">Select sync direction</string>
     <string name="nav_drawer_pinned_header">Pinned</string>
     <string name="nav_header_options_header">Options</string>
-    <string name="download_cancelled">Download cancelled</string>
+    <string name="worker_download_cancelled">Download cancelled</string>
     <string name="wifi_connections_isnt_available">Wi-Fi connection isn\'t available</string>
-    <string name="upload_cancelled">Upload cancelled</string>
+    <string name="worker_upload_cancelled">Upload cancelled</string>
     <string name="logging_settings_header">Logging</string>
     <string name="look_and_feel_settings_icon_content_description">Look and Feel settings icon</string>
     <string name="general_settings_icon_content_description">General settings icon</string>
@@ -421,6 +421,24 @@
     <plurals name="modern_prettyprint_duration_s">
         <item quantity="one">%s Second</item>
         <item quantity="other">%s Seconds</item>
+    </plurals>
+    <plurals name="worker_deleting_success_message">
+        <item quantity="zero">Nothing was deleted.</item>
+        <item quantity="other">%s was deleted!</item>
+    </plurals>
+    <plurals name="worker_move_success_message">
+        <item quantity="zero">Nothing was moved.</item>
+        <item quantity="other">%s was moved!</item>
+    </plurals>
+    <plurals name="worker_download_success_message">
+        <item quantity="zero">Nothing was downloaded.</item>
+        <item quantity="one">%s File was downloaded!</item>
+        <item quantity="other">%s Files were downloaded!</item>
+    </plurals>
+    <plurals name="worker_upload_success_message">
+        <item quantity="zero">Nothing was uploaded.</item>
+        <item quantity="one">%s was uploaded!</item>
+        <item quantity="other">%s Files were uploaded!</item>
     </plurals>
 
     <string name="abi_not_supported_arm_downgrade">Unfortunately, this Round Sync version is not compatible with your device. Try the armeabi-v7a APK from github.com/newhinton/Round-Sync/releases/latest.</string>
@@ -575,4 +593,12 @@
     <string name="delete_service_notification_description">This notification shows deletions</string>
     <string name="move_service_notification_title">Moves</string>
     <string name="move_service_notification_description">This notification shows moves</string>
+    <string name="worker_deleting_initialtitle">Deleting…</string>
+    <string name="worker_deleting_success">Deleted!</string>
+    <string name="worker_deleting_failed">Failed to delete files or folders!</string>
+    <string name="worker_move_initialtitle">Moving…</string>
+    <string name="worker_move_failed">Move failed!</string>
+    <string name="worker_move_success">Move was successful!</string>
+    <string name="worker_download_initialtitle">Downloading…</string>
+    <string name="worker_upload_initialtitle">Uploading…</string>
 </resources>

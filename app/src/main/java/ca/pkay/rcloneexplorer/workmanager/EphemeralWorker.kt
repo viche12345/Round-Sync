@@ -35,6 +35,8 @@ import java.io.InputStreamReader
 import java.io.InterruptedIOException
 import kotlin.random.Random
 import android.util.Log
+import de.felixnuesse.extract.notifications.implementations.DeleteWorkerNotification
+import de.felixnuesse.extract.notifications.implementations.MoveWorkerNotification
 import de.felixnuesse.extract.notifications.implementations.UploadWorkerNotification
 
 
@@ -55,7 +57,6 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
         const val MOVE_TARGETPATH = "MOVE_TARGETPATH"
 
         const val DELETE_FILE = "DELETE_FILE"
-        const val DELETE_PATH = "DELETE_PATH"
     }
 
     internal enum class FAILURE_REASON {
@@ -82,7 +83,7 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
     private val ongoingNotificationID = Random.nextInt()
 
 
-    private var mTitle: String = getString(mNotificationManager?.titleStartingSync)
+    private var mTitle: String = mNotificationManager?.initialTitle ?: ""
 
     override fun doWork(): Result {
 
@@ -148,7 +149,6 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
                     )
                 }
                 Type.DELETE -> {
-                    val d = inputData.getString(DELETE_PATH)
                     val fileItem = getFileitemFromParcel(DELETE_FILE)
 
                     if(fileItem == null){
@@ -197,7 +197,8 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
         return when(type){
             Type.DOWNLOAD -> DownloadWorkerNotification(mContext)
             Type.UPLOAD -> UploadWorkerNotification(mContext)
-            else -> DownloadWorkerNotification(mContext)
+            Type.DELETE -> DeleteWorkerNotification(mContext)
+            Type.MOVE -> MoveWorkerNotification(mContext)
         }
     }
 
@@ -303,27 +304,10 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
 
     private fun showSuccessNotification(notificationId: Int) {
         //Todo: Show sync-errors in notification. Also see line 169
-        var message = mContext.resources.getQuantityString(
-            R.plurals.operation_success_description,
-            statusObject.getTotalTransfers(),
-            mTitle,
-            statusObject.getTotalSize(),
-            statusObject.getTotalTransfers()
-        )
-        if (statusObject.getTotalTransfers() == 0) {
-            message = mContext.resources.getString(R.string.operation_success_description_zero)
-        }
-        if (statusObject.getDeletions() > 0) {
-            message += """
-                        
-                        ${
-                mContext.getString(
-                    R.string.operation_success_description_deletions_prefix,
-                    statusObject.getDeletions()
-                )
-            }
-                        """.trimIndent()
-        }
+        //Todo: This should be context dependend on the type. It is currently not!
+
+
+        var message = mNotificationManager?.generateSuccessMessage(statusObject, getCurrentFile())?: "error"
 
         mNotificationManager?.showSuccessNotification(
             mTitle,
@@ -426,12 +410,12 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
             }
         }
 
-    private fun getFileitemFromParcel(key: String): FileItem? {
+    private fun getFileitemFromParcel(key: String): FileItem {
 
         val sourceParcelByteArray = inputData.getByteArray(key)
         if(sourceParcelByteArray == null){
             log("No valid target was passed!")
-            return null
+            throw NullPointerException("The passed FileItem was null. We cannot continue!")
         }
 
         val parcel = Parcel.obtain()
@@ -452,5 +436,34 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
         parcel.unmarshall(sourceParcelByteArray, 0, sourceParcelByteArray.size)
         parcel.setDataPosition(0)
         return RemoteItem.CREATOR.createFromParcel(parcel)
+    }
+
+    private fun getCurrentFile(): FileItem {
+        return when(Type.valueOf(inputData.getString(EPHEMERAL_TYPE)?:Type.DOWNLOAD.name)){
+            Type.DOWNLOAD -> {
+                getFileitemFromParcel(DOWNLOAD_SOURCE)
+            }
+            Type.UPLOAD -> {
+                val pathAndName = inputData.getString(UPLOAD_FILE) ?: ""
+                val name = pathAndName.substring(pathAndName.lastIndexOf("/")+1, pathAndName.length)
+                val path = pathAndName.substring(0, pathAndName.lastIndexOf("/")+1)
+                // TODO: Make this work properly! All the params are guessed!
+                FileItem(
+                        RemoteItem("", ""),
+                        path,
+                        name,
+                        0L,
+                        "modTime",
+                        "mimeType",
+                        false,
+                        false)
+            }
+            Type.MOVE -> {
+                getFileitemFromParcel(MOVE_FILE)
+            }
+            Type.DELETE -> {
+                getFileitemFromParcel(DELETE_FILE)
+            }
+        }
     }
 }
