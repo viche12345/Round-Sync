@@ -128,7 +128,6 @@
     <string name="app_not_configured">Rclone Explorer ist nicht konfiguriert</string>
     <string name="open_app_to_configure">Bitte zuerst die App einrichten</string>
     <string name="error_retrieving_files">Fehler beim Abrufen der Dateien</string>
-    <string name="background_service_notification_channel_description">Hintergrunddienst für möglicherweise lange laufende Aufgaben wie Verschieben und Löschen</string>
     <string name="sync_service_notification_channel_description">Hintergrunddienst für Synchronisierung</string>
     <string name="moving_info">Verschiebe…</string>
     <string name="deleting_info">Lösche…</string>

@@ -140,7 +140,6 @@
     <string name="app_not_configured">Round Sync 尚未配置</string>
     <string name="open_app_to_configure">请先打开应用进行设置</string>
     <string name="error_retrieving_files">检索文件时出错</string>
-    <string name="background_service_notification_channel_description">用于移动和删除等长期运行任务的后台服务</string>
     <string name="sync_service_notification_channel_description">用于同步服务</string>
     <string name="moving_info">移动中…</string>
     <string name="deleting_info">删除中…</string>
