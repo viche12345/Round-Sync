@@ -118,6 +118,7 @@ android {
         getByName("debug") {
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-DEBUG"
+            buildConfigField "java.lang.String", "VCP_AUTHORITY", "\"" + defaultConfig.applicationId + ".debug.vcp\"";
             resValue("string", "app_name", "RS Debug")
             resValue("string", "app_short_name", "RS Debug")
         }

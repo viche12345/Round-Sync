@@ -278,7 +278,8 @@ public class VirtualContentProvider extends SingleRootProvider {
                     FLog.v(TAG, "queryRoots: no remote data change");
                 }
             }, asyncExc);
-            String summary = context.getResources().getQuantityString(R.plurals.virtual_content_provider_summary, remotes.size());
+            int size = remotes.size();
+            String summary = context.getResources().getQuantityString(R.plurals.virtual_content_provider_summary, size, size);
             return buildRoot(R.mipmap.ic_launcher, R.string.app_name, summary, flags);
         } else {
             FLog.v(TAG, "queryRoots: VCP loading");
