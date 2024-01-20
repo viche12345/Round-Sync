@@ -320,7 +320,7 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
         Est. Speed: ${statusObject.getEstimatedAverageSpeed()}
         Avg. Speed: ${statusObject.getLastItemAverageSpeed()}
                         """.trimIndent()
-        SyncLog.info(mContext, mContext.getString(R.string.operation_success, mTitle), message)
+        //SyncLog.info(mContext, mContext.getString(R.string.operation_success, mTitle), message)
     }
 
     private fun showFailNotification(notificationId: Int, content: String, wasCancelled: Boolean = false) {
