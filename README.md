@@ -57,7 +57,7 @@ The intent needs the following:
 
 | Intent          |                   Content                   |                 |
 |:----------------|:-------------------------------------------:|----------------:|
-| packageName     |           ca.pkay.rcloneexplorer            |                 |
+| packageName     |           de.felixnuesse.extract            |                 |
 | className       | ca.pkay.rcloneexplorer.Services.SyncService |                 |
 | Action          |                 START_TASK                  |                 |
 | Integer Extra   |                    task                     |        idOfTask |

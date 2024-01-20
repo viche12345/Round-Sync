@@ -84,7 +84,13 @@
             android:name=".Services.ReportService"
             android:foregroundServiceType="dataSync" />
 
-        <!-- This is a default service required for any and all Workers. Do not remove.-->
+        <!-- Used to expose tasks to other apps, no other functionality-->
+        <service
+            android:name=".Services.SyncService"
+            android:exported="true">
+    </service>
+
+    <!-- This is a default service required for any and all Workers. Do not remove.-->
         <service
             android:name="androidx.work.impl.foreground.SystemForegroundService"
             android:foregroundServiceType="dataSync" />

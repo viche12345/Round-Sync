@@ -184,10 +184,11 @@ public class TasksRecyclerViewAdapter extends RecyclerView.Adapter<TasksRecycler
                     removeItem(task);
                     break;
                 case R.id.action_copy_id_task:
+                    String id = String.valueOf(task.getId());
                     ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                    ClipData clip = ClipData.newPlainText(clipboardID, String.valueOf(task.getId()));
+                    ClipData clip = ClipData.newPlainText(clipboardID, id);
                     clipboard.setPrimaryClip(clip);
-                    Toasty.info(context, context.getResources().getString(R.string.task_copied_id_to_clipboard), Toast.LENGTH_SHORT, true).show();
+                    Toasty.info(context, context.getResources().getString(R.string.task_copied_id_to_clipboard, id), Toast.LENGTH_SHORT, true).show();
                     break;
                 case R.id.action_add_to_home_screen:
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
