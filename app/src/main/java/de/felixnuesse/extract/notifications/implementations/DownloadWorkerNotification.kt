@@ -33,8 +33,8 @@ class DownloadWorkerNotification(var context: Context) : WorkerNotification(cont
     override fun generateSuccessMessage(statusObject: StatusObject, fileItem: FileItem): String {
 
         val transfers = statusObject.getTotalTransfers()
-        val message = if (transfers <= 1) {
-            statusObject.getTotalTransfers().toString()
+        val message = if (transfers <= 1 && !fileItem.isDir) {
+            statusObject.getTransfers().toString()
         } else {
             fileItem.name
         }

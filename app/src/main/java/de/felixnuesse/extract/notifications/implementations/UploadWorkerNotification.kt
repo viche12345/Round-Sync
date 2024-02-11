@@ -30,8 +30,8 @@ class UploadWorkerNotification(var context: Context) : WorkerNotification(contex
 
     override fun generateSuccessMessage(statusObject: StatusObject, fileItem: FileItem): String {
         val transfers = statusObject.getTotalTransfers()
-        val message = if (transfers <= 1) {
-            statusObject.getTotalTransfers().toString()
+        val message = if (transfers <= 1 && !fileItem.isDir) {
+            statusObject.getTransfers().toString()
         } else {
             fileItem.name
         }
