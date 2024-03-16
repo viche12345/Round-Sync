@@ -277,7 +277,6 @@
     <string name="rcd_service_notification_channel_description">Hintergrunddienst</string>
     <string name="serve_dialog_remote_notice_enabled">Der aktuelle Ordner wird im Netzwerk sichtbar (für TVs, Media Player)</string>
     <string name="serve_dialog_remote_notice_disabled">Datein sind nur für andere Apps auf diesem Gerät sichtbar.</string>
-    <string name="pref_crash_report_summary">Hilf uns bei der Weiterenwicklung, indem du automatisch Fehlerberichte sendest. Details unter https://x0b.github.io/rcx-privacy. \nID: %1$s.</string>
     <string name="report_collection_title">Fehlerbericht</string>
     <string name="report_collection_collecting">Erfasse Daten für Fehlerbericht</string>
     <string name="report_collection_stop_collection">Erfassung beenden</string>
