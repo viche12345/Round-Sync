@@ -165,7 +165,7 @@
     <string name="pref_locale_restart_notice">Changing the language will take effect after restarting the app</string>
     <string name="pref_key_locale" translatable="false">locale</string>
     <string name="use_logs">Log rclone errors</string>
-    <string name="use_logs_summary">Error logs will be saved to a local file at \'Android/data/de.felixnuesse.extract/files/logs\'</string>
+    <string name="use_logs_summary">Error logs will be saved to a local file at (Android/data/de.felixnuesse.extract/files/logs)</string>
     <string name="notifications_pref_title">Notifications</string>
     <string name="open_system_settings">Open system settings</string>
     <string name="content_description_circle">circle</string>
@@ -222,10 +222,6 @@
     <string name="generating_public_link">Generating public link</string>
     <string name="public_link">Public link</string>
     <string name="link_copied_to_clipboard">Link copied to clipboard</string>
-    <string name="send_anonymous_crash_reports">Send anonymous crash reports</string>
-    <string name="pref_crash_report_summary">Help the devs by sending error and crash reports. See https://x0b.github.io/rcx-privacy. \nID: %1$s.</string>
-    <string name="pref_send_test_report_title">Send Test Report</string>
-    <string name="pref_send_test_report_summary">Sends a test report to the crash logger</string>
     <string name="pin_to_the_top">Pin to the top</string>
     <string name="unpin_from_the_top">Unpin</string>
     <string name="pin_to_drawer">Pin to drawer</string>

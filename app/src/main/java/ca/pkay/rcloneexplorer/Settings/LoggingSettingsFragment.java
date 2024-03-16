@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -23,9 +22,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ca.pkay.rcloneexplorer.R;
-import ca.pkay.rcloneexplorer.Services.ReportService;
 import ca.pkay.rcloneexplorer.util.FLog;
-import es.dmoral.toasty.Toasty;
 
 public class LoggingSettingsFragment extends Fragment {
 
@@ -34,11 +31,6 @@ public class LoggingSettingsFragment extends Fragment {
     private Context context;
     private Switch useLogsSwitch;
     private View useLogsElement;
-    private View crashReportsElement;
-    private TextView crashReportSummary;
-    private Switch crashReportsSwitch;
-    private View testReportElement;
-    private View startCollectionElement;
     private View sigquitElement;
 
     /**
@@ -81,43 +73,19 @@ public class LoggingSettingsFragment extends Fragment {
     private void getViews(View view) {
         useLogsSwitch = view.findViewById(R.id.use_logs_switch);
         useLogsElement = view.findViewById(R.id.use_logs);
-        crashReportsElement = view.findViewById(R.id.crash_reporting);
-        crashReportsSwitch = view.findViewById(R.id.crash_reporting_switch);
-        crashReportSummary = view.findViewById(R.id.txt_crash_report_summary);
-        testReportElement = view.findViewById(R.id.send_test_report);
-        startCollectionElement = view.findViewById(R.id.start_report_collection);
         sigquitElement = view.findViewById(R.id.send_sigquit_to_rclone);
     }
 
     private void setDefaultStates() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         boolean useLogs = sharedPreferences.getBoolean(getString(R.string.pref_key_logs), false);
-        boolean crashReports = sharedPreferences.getBoolean(getString(R.string.pref_key_crash_reports),
-                getResources().getBoolean(R.bool.default_crash_log_enable));
 
         useLogsSwitch.setChecked(useLogs);
-        crashReportsSwitch.setChecked(crashReports);
-        if (crashReports) {
-
-        } else {
-            crashReportSummary.setText(getString(R.string.pref_crash_report_summary, "N/A"));
-        }
     }
 
     private void setClickListeners() {
         useLogsElement.setOnClickListener(v -> useLogsSwitch.setChecked(!useLogsSwitch.isChecked()));
         useLogsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> onUseLogsClicked(isChecked));
-        crashReportsElement.setOnClickListener(v -> crashReportsSwitch.setChecked(!crashReportsSwitch.isChecked()));
-        crashReportsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> crashReportsClicked(isChecked));
-        testReportElement.setOnClickListener(v -> FLog.e(
-                "TestReport",
-                "Sending test report, %s, %s, %s",
-                "/storage/0/private.file",
-                "content://authority/private.file",
-                "Non-filterd argument"));
-        startCollectionElement.setOnClickListener(v -> {
-            ReportService.startCollection(context, ReportService.RCLONE_LOGS | ReportService.LOGCAT);
-        });
         sigquitElement.setOnClickListener(this::sigquitAll);
     }
 
@@ -126,15 +94,6 @@ public class LoggingSettingsFragment extends Fragment {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(getString(R.string.pref_key_logs), isChecked);
         editor.apply();
-    }
-
-    private void crashReportsClicked(boolean isChecked) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(getString(R.string.pref_key_crash_reports), isChecked);
-        editor.apply();
-
-        Toasty.info(context, getString(R.string.restart_required), Toast.LENGTH_SHORT, true).show();
     }
 
     private void sigquitAll(View view) {

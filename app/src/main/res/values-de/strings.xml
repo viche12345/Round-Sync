@@ -120,7 +120,7 @@
     <string name="pref_locale_dlg_title">Sprache auswählen</string>
     <string name="pref_locale_restart_notice">Sprache wird beim nächsten neustart der App geändert.</string>
     <string name="use_logs">Rclone-Fehler protokollieren</string>
-    <string name="use_logs_summary">Fehler werden in einer lokalen Datei protokolliert (Android/data/io.github.rcx/files/logs)</string>
+    <string name="use_logs_summary">Fehler werden in einer lokalen Datei protokolliert (Android/data/de.felixnuesse.extract/files/logs)</string>
     <string name="notifications_pref_title">Benachrichtigungen</string>
     <string name="open_system_settings">Systemeinstellungen öffnen</string>
     <string name="content_description_circle">Kreis</string>
@@ -171,9 +171,6 @@
     <string name="generating_public_link">Erstelle öffentlichen Link</string>
     <string name="public_link">Öffentlicher Link</string>
     <string name="link_copied_to_clipboard">Link in Zwischenablage kopiert</string>
-    <string name="send_anonymous_crash_reports">Anonyme Absturzberichte senden</string>
-    <string name="pref_send_test_report_title">Test-Fehlerbericht senden</string>
-    <string name="pref_send_test_report_summary">Testet die Fehlerberichterstattung</string>
     <string name="pin_to_the_top">Oben anheften</string>
     <string name="unpin_from_the_top">Nicht mehr anheften</string>
     <string name="pin_to_drawer">Im Menü anheften</string>
