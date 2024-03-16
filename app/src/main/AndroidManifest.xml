@@ -80,9 +80,6 @@
         <service
             android:name=".Services.RcdService"
             android:foregroundServiceType="dataSync" />
-        <service
-            android:name=".Services.ReportService"
-            android:foregroundServiceType="dataSync" />
 
         <!-- Used to expose tasks to other apps, no other functionality-->
         <service
@@ -97,7 +94,6 @@
 
         <receiver android:name=".BroadcastReceivers.ServeCancelAction" />
         <receiver android:name=".Services.RcdService$RcdServiceAction" />
-        <receiver android:name=".Services.ReportService$StopCollectionReceiver" />
         <receiver
             android:name=".BroadcastReceivers.BootReciever"
             android:exported="true">
