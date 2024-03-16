@@ -166,12 +166,13 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
             mNotificationManager?.setCancelId(id)
             if(preconditionsMet()) {
                 handleSync(mTitle)
-                postSync()
             } else {
                 log("Preconditions are not met!")
+                postSync()
                 return Result.failure()
             }
 
+            postSync()
             // Indicate whether the work finished successfully with the Result
             return Result.success()
         }
