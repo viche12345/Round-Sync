@@ -1511,7 +1511,7 @@ public class Rclone {
             Process process;
 
             try {
-                process = getRuntimeProcess(command);
+                process = getRuntimeProcess(command, getRcloneEnv());
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 String line;
                 while ((line = reader.readLine()) != null) {
