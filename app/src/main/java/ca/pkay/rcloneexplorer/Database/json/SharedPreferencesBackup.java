@@ -80,7 +80,7 @@ public class SharedPreferencesBackup {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         //General Settings
-        editor.putBoolean(context.getString(R.string.pref_key_app_updates_beta), jsonObject.getBoolean("showThumbnails"));
+        editor.putBoolean(context.getString(R.string.pref_key_show_thumbnails), jsonObject.getBoolean("showThumbnails"));
         editor.putBoolean(context.getString(R.string.pref_key_wifi_only_transfers), jsonObject.getBoolean("isWifiOnly"));
         editor.putBoolean(context.getString(R.string.pref_key_use_proxy), jsonObject.getBoolean("useProxy"));
         editor.putBoolean(context.getString(R.string.shared_preferences_allow_sync_trigger_while_idle), jsonObject.optBoolean("allowWhileIdle", false));
