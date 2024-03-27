@@ -13,7 +13,7 @@ import android.os.Environment
 import android.os.PowerManager
 import android.provider.Settings
 import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityCompat.startActivityForResult
+import androidx.core.app.NotificationManagerCompat
 import ca.pkay.rcloneexplorer.BuildConfig
 
 
@@ -77,7 +77,7 @@ class PermissionManager(private var mContext: Context) {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
            ActivityCompat.checkSelfPermission(mContext, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
         } else {
-            true
+            NotificationManagerCompat.from(mContext).areNotificationsEnabled()
         }
     }
 
