@@ -20,6 +20,30 @@
         android:animateLayoutChanges="true">
 
 
+        <RelativeLayout
+            android:id="@+id/app_updates"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingTop="@dimen/settings_padding_topbottom"
+                android:paddingBottom="@dimen/settings_padding_topbottom"
+                android:text="@string/app_updates_notifications" />
+
+            <Switch
+                android:id="@+id/app_updates_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true" />
+
+        </RelativeLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/notifications_reports"
             android:layout_width="match_parent"

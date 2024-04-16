@@ -52,6 +52,7 @@ android {
                     appIcon: "@mipmap/ic_launcher",
                     appIconRound: "@mipmap/ic_launcher_round"
             ]
+            signingConfig signingConfigs.release
         }
     }
 
@@ -195,4 +196,7 @@ dependencies {
     // Splash screen
     implementation("androidx.core:core-splashscreen:1.0.1")
 
+    //Updates
+    implementation 'com.github.Sharkaboi:AppUpdateChecker:v1.0.5'
+    implementation("com.google.android.play:app-update-ktx:2.1.0")
 }

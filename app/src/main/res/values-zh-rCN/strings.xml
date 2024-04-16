@@ -134,7 +134,6 @@
     <string name="use_logs">记录 Rclone 错误</string>
     <string name="use_logs_summary">错误日志将会保存到本地文件夹 (Android/data/de.felixnuesse.extract/files/logs)</string>
     <string name="notifications_pref_title">消息通知</string>
-    <string name="open_system_settings">打开系统设置</string>
     <string name="content_description_circle">圈</string>
     <string name="loading">加载中</string>
     <string name="app_not_configured">Round Sync 尚未配置</string>

@@ -130,7 +130,9 @@
     <string name="pref_key_dark_theme" translatable="false">pref_key_theme_mode</string>
     <string name="pref_key_wrap_filenames" translatable="false">pref_key_wrap_filenames</string>
     <string name="pref_key_app_updates" translatable="false">pref_key_app_updates</string>
-    <string name="pref_key_app_updates_beta" translatable="false">pref_key_app_updates_beta</string>
+    <string name="pref_key_app_update_dismiss_current_update" translatable="false">app_update_dismiss_current_update</string>
+    <string name="pref_key_app_updates_found_update_for_version" translatable="false">app_updates_found_update_for_version</string>
+    <string name="pref_key_app_updates_changelog" translatable="false">app_updates_changelog</string>
     <string name="pref_key_app_notification_reports" translatable="false">pref_key_app_notification_reports</string>
     <string name="pref_key_show_thumbnails" translatable="false">pref_key_show_thumbnails</string>
     <string name="pref_key_thumbnail_size_limit" translatable="false">thumbnail_max_size</string>
@@ -166,7 +168,7 @@
     <string name="use_logs">Log rclone errors</string>
     <string name="use_logs_summary">Error logs will be saved to a local file at (Android/data/de.felixnuesse.extract/files/logs)</string>
     <string name="notifications_pref_title">Notifications</string>
-    <string name="open_system_settings">Open system settings</string>
+    <string name="open_notification_settings">Open notification settings</string>
     <string name="content_description_circle">circle</string>
     <string name="loading">Loading</string>
     <string name="app_not_configured">Round Sync is not configured</string>
@@ -207,9 +209,13 @@
     <string name="next">Next</string>
     <string name="title_activity_remote_config">Select type</string>
     <string name="error_exporting_config_file">Error exporting config file</string>
-    <string name="app_update_notification_title">App update available on Github</string>
+    <string name="app_update_notification_title">App update available!</string>
+    <string name="app_update_notification_description">Version %1$s was found! Do you want to apply it?</string>
+    <string name="app_updates_notification_action_ignore">Ignore Update</string>
+    <string name="app_updates_notification_action_apply">Apply Update</string>
     <string name="app_updates_notifications">Get notified about app updates</string>
-    <string name="beta_app_updates_notifications">Get notified about pre-release versions</string>
+    <string name="app_update_notification_channel_name">Update Notifications</string>
+    <string name="app_update_notification_channel_description">Shows notifications related to app updates</string>
     <string name="delete_remote_title">Delete remote?</string>
     <string name="rename_remote">Rename Remote</string>
     <string name="empty_trash">Empty trash</string>
@@ -592,4 +598,8 @@
     <string name="worker_move_success">Move was successful!</string>
     <string name="worker_download_initialtitle">Downloading…</string>
     <string name="worker_upload_initialtitle">Uploading…</string>
+    <string name="appupdate_incompatible">This update is incompatible with your device!</string>
+    <string name="appupdate_outofstorage">You do not have sufficient free space to install this app!</string>
+    <string name="appupdate_corrupted">The downloaded apk was damaged!</string>
+    <string name="appupdate_conflicting">The newer version does not match your installed app!</string>
 </resources>
