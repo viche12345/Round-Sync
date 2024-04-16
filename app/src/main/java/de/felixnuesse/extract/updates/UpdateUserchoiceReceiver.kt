@@ -33,7 +33,7 @@ class UpdateUserchoiceReceiver : BroadcastReceiver() {
             Log.e(tag(), "Ignore current update!")
             val key = context.getString(R.string.pref_key_app_update_dismiss_current_update)
             preferenceManager.edit().putString(key, intent.getStringExtra(IGNORE_VERSION_EXTRA)).apply()
-            AppUpdateNotification(context). cancelNotification()
+            AppUpdateNotification(context).cancelNotification()
         }
 
         if(intent.action == ACTION_DOWNLOAD) {
@@ -57,21 +57,22 @@ class UpdateUserchoiceReceiver : BroadcastReceiver() {
                     downloadAndInstall(
                         URL("https://github.com/newhinton/Round-Sync/releases/download/$version/roundsync_$version-oss-$abi-release.apk"),
                         context,
-                        version
+                        version,
+                        abi
                     )
                 }
             }
-            AppUpdateNotification(context). cancelNotification()
+            AppUpdateNotification(context).cancelNotification()
         }
     }
 
     @RequiresApi(VERSION_CODES.N)
-    private fun downloadAndInstall(url: URL, context: Context, version: String) {
+    private fun downloadAndInstall(url: URL, context: Context, version: String, abi: String) {
         Log.e(tag(), "Download url: $url")
         Thread {
             val dir = context.externalCacheDir?.absolutePath ?: ""
             Log.e(tag(), "Download dir: $dir")
-            val target = File(dir, "roundsync-$version.apk")
+            val target = File(dir, "roundsync_$version-oss-$abi-release.apk")
             url.openStream()
                 .use { input ->
                 FileOutputStream(target).use {
