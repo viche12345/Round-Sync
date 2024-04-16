@@ -132,7 +132,6 @@
     <string name="pref_key_app_updates" translatable="false">pref_key_app_updates</string>
     <string name="pref_key_app_updates_beta" translatable="false">pref_key_app_updates_beta</string>
     <string name="pref_key_app_notification_reports" translatable="false">pref_key_app_notification_reports</string>
-    <string name="pref_key_crash_reports" translatable="false">pref_key_crash_reports</string>
     <string name="pref_key_show_thumbnails" translatable="false">pref_key_show_thumbnails</string>
     <string name="pref_key_thumbnail_size_limit" translatable="false">thumbnail_max_size</string>
     <string name="pref_key_wifi_only_transfers" translatable="false">pref_key_wifi_only_transfers</string>
@@ -229,10 +228,6 @@
     <string name="shared_preferences_pinned_remotes" translatable="false">shared_preferences_pinned_remotes</string>
     <string name="shared_preferences_drawer_pinned_remotes" translatable="false">shared_preferences_drawer_pinned_remotes</string>
     <string name="shared_preferences_allow_sync_trigger_while_idle" translatable="false">shared_preferences_allow_sync_trigger_while_idle</string>
-    <string name="app_latest_release_url" translatable="false">https://github.com/newhinton/Round-Sync/releases/latest</string>
-    <string name="app_relase_api_url" translatable="false">https://api.github.com/repos/newhinton/Round-Sync/releases/latest</string>
-    <string name="app_pre_release_api_url" translatable="false">https://api.github.com/repos/newhinton/Round-Sync/releases</string>
-    <string name="pref_key_update_last_check" translatable="false">last_update_check</string>
     <string name="show_thumbnails">Show thumbnails</string>
     <string name="pref_thumbnails_size_title">Maximum file size for thumbnails</string>
     <string name="pref_thumbnails_dlg_title">Size limit (MB)</string>

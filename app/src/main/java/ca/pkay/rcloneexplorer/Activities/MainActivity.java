@@ -146,22 +146,6 @@ public class MainActivity extends AppCompatActivity
 
         findViewById(R.id.locked_config_btn).setOnClickListener(v -> askForConfigPassword());
 
-        boolean appUpdates = sharedPreferences.getBoolean(getString(R.string.pref_key_app_updates), true);
-        if (appUpdates) {
-            // Google Play and F-Droid have their own update mechanisms
-            // => do not check for updates
-            PackageManager packageManager = getPackageManager();
-            if ("com.android.vending".equals(packageManager.getInstallerPackageName(getPackageName()))
-                    || BuildConfig.DEBUG) {
-                FLog.d(TAG, "Installed via Google Play, not checking for updates");
-            } else if ("oss".equals(BuildConfig.FLAVOR)){
-                FLog.d(TAG, "OSS flavor, not checking for updates");
-            } else {
-                PackageUpdate packageUpdate = new PackageUpdate(this);
-                packageUpdate.checkForUpdate(false);
-            }
-        }
-
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 

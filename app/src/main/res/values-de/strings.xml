@@ -159,7 +159,6 @@
     <string name="error_exporting_config_file">Fehler beim Exportieren der Konfigurationsdatei</string>
     <string name="app_update_notification_title">App-Update auf GitHub verfügbar</string>
     <string name="app_updates_notifications">Über App-Aktualisierungen benachrichtigen</string>
-    <string name="beta_app_updates_notifications">Über Beta-Versionen benachrichtigen</string>
     <string name="delete_remote_title">Remote löschen?</string>
     <string name="rename_remote">Remote umbenennen</string>
     <string name="empty_trash">Papierkorb leeren</string>

@@ -41,12 +41,9 @@ public class SharedPreferencesBackup {
 
         // Notifications
         boolean appUpdates = sharedPreferences.getBoolean(context.getString(R.string.pref_key_app_updates), true);
-        boolean betaUpdates = sharedPreferences.getBoolean(context.getString(R.string.pref_key_app_updates_beta), false);
 
         // Logging
         boolean useLogs = sharedPreferences.getBoolean(context.getString(R.string.pref_key_logs), false);
-        boolean crashReports = sharedPreferences.getBoolean(context.getString(R.string.pref_key_crash_reports),
-                context.getResources().getBoolean(R.bool.default_crash_log_enable));
 
 
         JSONObject main = new JSONObject();
@@ -66,9 +63,7 @@ public class SharedPreferencesBackup {
         main.put("isDarkTheme", darkTheme);
         main.put("isWrapFilenames", isWrapFilenames);
         main.put("appUpdates", appUpdates);
-        main.put("betaUpdates", betaUpdates);
         main.put("useLogs", useLogs);
-        main.put("crashReports", crashReports);
 
         return main.toString();
     }
@@ -116,11 +111,9 @@ public class SharedPreferencesBackup {
 
         // Notifications
         editor.putBoolean(context.getString(R.string.pref_key_app_updates), jsonObject.getBoolean("appUpdates"));
-        editor.putBoolean(context.getString(R.string.pref_key_app_updates_beta), jsonObject.getBoolean("betaUpdates"));
 
         // Logging
         editor.putBoolean(context.getString(R.string.pref_key_logs), jsonObject.getBoolean("useLogs"));
-        editor.putBoolean(context.getString(R.string.pref_key_crash_reports), jsonObject.getBoolean("crashReports"));
 
         editor.apply();
     }

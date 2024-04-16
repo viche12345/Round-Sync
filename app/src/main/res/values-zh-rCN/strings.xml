@@ -172,7 +172,6 @@
     <string name="error_exporting_config_file">导出配置文件时出错</string>
     <string name="app_update_notification_title">应用更新现已发布在 Github 上</string>
     <string name="app_updates_notifications">获得有关应用更新的通知</string>
-    <string name="beta_app_updates_notifications">获得有关预发布版本的通知</string>
     <string name="delete_remote_title">是否删除远端？</string>
     <string name="rename_remote">重命名远端</string>
     <string name="empty_trash">清空回收站</string>

@@ -25,8 +25,6 @@ public class NotificationsSettingsFragment extends Fragment {
     private View notificationsElement;
     private View appUpdatesElement;
     private Switch appUpdatesSwitch;
-    private View betaAppUpdatesElement;
-    private Switch betaAppUpdatesSwitch;
     private Switch mNotificationReportSwitch;
 
     /**
@@ -70,35 +68,16 @@ public class NotificationsSettingsFragment extends Fragment {
         notificationsElement = view.findViewById(R.id.notifications);
         appUpdatesElement = view.findViewById(R.id.app_updates);
         appUpdatesSwitch = view.findViewById(R.id.app_updates_switch);
-        betaAppUpdatesElement = view.findViewById(R.id.beta_app_updates);
-        betaAppUpdatesSwitch = view.findViewById(R.id.beta_app_updates_switch);
         mNotificationReportSwitch = view.findViewById(R.id.app_notification_report_switch);
     }
 
     private void setDefaultStates() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         boolean appUpdates = sharedPreferences.getBoolean(getString(R.string.pref_key_app_updates), true);
-        boolean betaUpdates = sharedPreferences.getBoolean(getString(R.string.pref_key_app_updates_beta), false);
         boolean notificationReports = sharedPreferences.getBoolean(getString(R.string.pref_key_app_notification_reports), true);
 
         appUpdatesSwitch.setChecked(appUpdates);
-        betaAppUpdatesSwitch.setChecked(betaUpdates);
         mNotificationReportSwitch.setChecked(notificationReports);
-
-        String installer = context.getPackageManager().getInstallerPackageName(context.getPackageName());
-        boolean isPlayStore = "com.android.vending".equals(installer);
-        boolean isOss = "oss".equals(BuildConfig.FLAVOR);
-        if (isOss || isPlayStore) {
-            appUpdatesElement.setVisibility(View.GONE);
-            betaAppUpdatesElement.setVisibility(View.GONE);
-            return;
-        }
-
-        if (appUpdates) {
-            betaAppUpdatesElement.setVisibility(View.VISIBLE);
-        } else {
-            betaAppUpdatesElement.setVisibility(View.GONE);
-        }
     }
 
     private void setClickListeners() {
@@ -112,14 +91,6 @@ public class NotificationsSettingsFragment extends Fragment {
             }
         });
         appUpdatesSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> onAppUpdatesClicked(isChecked));
-        betaAppUpdatesElement.setOnClickListener(v -> {
-            if (betaAppUpdatesSwitch.isChecked()) {
-                betaAppUpdatesSwitch.setChecked(false);
-            } else {
-                betaAppUpdatesSwitch.setChecked(true);
-            }
-        });
-        betaAppUpdatesSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> onBetaAppUpdatesClicked(isChecked));
 
 
         mNotificationReportSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> onNotificationReportsClicked(isChecked));
@@ -144,25 +115,9 @@ public class NotificationsSettingsFragment extends Fragment {
     }
 
     private void onAppUpdatesClicked(boolean isChecked) {
-        if (isChecked) {
-            betaAppUpdatesElement.setVisibility(View.VISIBLE);
-        } else {
-            betaAppUpdatesSwitch.setChecked(false);
-            betaAppUpdatesElement.setVisibility(View.GONE);
-        }
-
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(getString(R.string.pref_key_app_updates), isChecked);
-        editor.putLong(getString(R.string.pref_key_update_last_check), 0L);
-        editor.apply();
-    }
-
-    private void onBetaAppUpdatesClicked(boolean isChecked) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(getString(R.string.pref_key_app_updates_beta), isChecked);
-        editor.putLong(getString(R.string.pref_key_update_last_check), 0L);
         editor.apply();
     }
 

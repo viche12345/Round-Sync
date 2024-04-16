@@ -48,13 +48,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <View
-                android:id="@+id/app_notification_report_divider"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/settings_divider_size"
-                android:background="@color/dividerColor"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -71,70 +64,10 @@
                 android:id="@+id/notifications"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/open_system_settings" />
+                android:text="@string/open_notification_settings" />
 
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/app_updates"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:paddingTop="@dimen/settings_padding_topbottom"
-                android:paddingBottom="@dimen/settings_padding_topbottom"
-                android:text="@string/app_updates_notifications"/>
-
-            <Switch
-                android:id="@+id/app_updates_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true" />
-
-            <View
-                android:id="@+id/app_updates_divider"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/settings_divider_size"
-                android:layout_alignParentBottom="true"
-                android:background="@color/dividerColor"/>
-        </RelativeLayout>
-
-
-        <RelativeLayout
-            android:id="@+id/beta_app_updates"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:paddingTop="@dimen/settings_padding_topbottom"
-                android:paddingBottom="@dimen/settings_padding_topbottom"
-                android:text="@string/beta_app_updates_notifications" />
-
-            <Switch
-                android:id="@+id/beta_app_updates_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true" />
-
-            <View
-                android:id="@+id/beta_app_updates_divider"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/settings_divider_size"
-                android:layout_alignParentBottom="true"
-                android:background="@color/dividerColor" />
-        </RelativeLayout>
 
     </LinearLayout>
 
