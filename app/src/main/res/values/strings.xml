@@ -602,4 +602,5 @@
     <string name="appupdate_outofstorage">You do not have sufficient free space to install this app!</string>
     <string name="appupdate_corrupted">The downloaded apk was damaged!</string>
     <string name="appupdate_conflicting">The newer version does not match your installed app!</string>
+    <string name="is_this_trigger_enabled">Is this trigger enabled?</string>
 </resources>
