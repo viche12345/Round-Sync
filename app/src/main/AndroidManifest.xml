@@ -94,7 +94,7 @@
             android:foregroundServiceType="dataSync" /> <!-- Used to expose tasks to other apps, no other functionality -->
         <service
             android:name=".Services.SyncService"
-            android:exported="true"></service> <!-- This is a default service required for any and all Workers. Do not remove. -->
+            android:exported="true" /> <!-- This is a default service required for any and all Workers. Do not remove. -->
         <service
             android:name="androidx.work.impl.foreground.SystemForegroundService"
             android:foregroundServiceType="dataSync" />
@@ -113,7 +113,7 @@
             android:exported="true" />
         <receiver
             android:name=".BroadcastReceivers.ClearReportBroadcastReciever"
-            android:exported="false"></receiver>
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

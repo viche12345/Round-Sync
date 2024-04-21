@@ -36,7 +36,8 @@ public class SharedPreferencesBackup {
         boolean vcpGrantAll = sharedPreferences.getBoolean(context.getString(R.string.pref_key_vcp_grant_all), false);
 
         // Look and Feel
-        int darkTheme = sharedPreferences.getInt(context.getString(R.string.pref_key_dark_theme), FOLLOW_SYSTEM);
+        int oldTheme = sharedPreferences.getInt(context.getString(R.string.pref_key_theme_old), FOLLOW_SYSTEM);
+        String newTheme = sharedPreferences.getString(context.getString(R.string.pref_key_theme), String.valueOf(oldTheme));
         boolean isWrapFilenames = sharedPreferences.getBoolean(context.getString(R.string.pref_key_wrap_filenames), true);
 
         // Notifications
@@ -60,7 +61,7 @@ public class SharedPreferencesBackup {
         main.put("vcpEnabled", vcpEnabled);
         main.put("vcpDeclareLocal", vcpDeclareLocal);
         main.put("vcpGrantAll", vcpGrantAll);
-        main.put("isDarkTheme", darkTheme);
+        main.put("isDarkTheme", newTheme);
         main.put("isWrapFilenames", isWrapFilenames);
         main.put("appUpdates", appUpdates);
         main.put("useLogs", useLogs);
@@ -102,10 +103,10 @@ public class SharedPreferencesBackup {
            } else {
                valueForTheme = LIGHT;
            }
-            editor.putInt(context.getString(R.string.pref_key_dark_theme), valueForTheme);
+            editor.putString(context.getString(R.string.pref_key_theme), String.valueOf(valueForTheme));
         }
 
-        editor.putInt(context.getString(R.string.pref_key_dark_theme), valueForTheme);
+        editor.putString(context.getString(R.string.pref_key_theme), String.valueOf(valueForTheme));
 
         editor.putBoolean(context.getString(R.string.pref_key_wrap_filenames), jsonObject.getBoolean("isWrapFilenames"));
 
