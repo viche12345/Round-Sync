@@ -455,8 +455,6 @@
     <string name="intro_alarms_description">Wir möchten in der Lage sein Alarme einzurichten um Synchronisierung zu starten. Keine Sorge, wir klingeln nicht durch!</string>
     <string name="operation_start_sync">Synchronisierung gestartet!</string>
     <string name="operation_sync_cancelled">Synchronisierung gestoppt!</string>
-    <string name="intro_notifications_denied">Wir benachrichtigen dich nicht.</string>
-    <string name="intro_alarms_denied">Wir können jetzt keine Alarme einrichten</string>
     <string name="app_error_notification_channel_name">App-Fehler</string>
     <string name="app_error_notification_channel_description">Fehler die spezifisch für diese App sind erscheinen in diesem Kanal</string>
     <string name="permissionFragment">Berechtigungen</string>

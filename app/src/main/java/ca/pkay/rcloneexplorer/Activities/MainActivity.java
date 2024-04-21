@@ -113,12 +113,14 @@ public class MainActivity extends AppCompatActivity
 
         ActivityHelper.applyTheme(this);
 
-        if(!(new PermissionManager(this)).hasAllRequiredPermissions()) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean allPermissionsGranted = (new PermissionManager(this)).hasAllRequiredPermissions();
+        boolean completedIntroOnce = OnboardingActivity.Companion.completedIntro(this);
+        if(!allPermissionsGranted || !completedIntroOnce) {
             startActivity(new Intent(this, OnboardingActivity.class));
             finish();
         }
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         context = this;
         drawerPinnedRemoteIds = new HashMap<>();

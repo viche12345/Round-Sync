@@ -471,7 +471,6 @@
     <string name="description_sync_direction_sync_bidirectional">Make sure local and remote storage have the same files by transferring, downloading, and deleting files as needed to maintain an identical folder structure.</string>
     <string name="intro_success">Success!</string>
     <string name="intro_successful_setup">You are now ready to start!</string>
-    <string name="intro_write_external_storage_denied">File access permission not granted</string>
     <string name="status_offendingfile">"The offending File: "</string>
     <string name="use_md5checksum">Use md5 checksum</string>
     <string name="task_hint_wifi_ignore_defaults">If enabled, this setting overrides the global setting to only transfer files over Wi-Fi</string>
@@ -515,8 +514,6 @@
     <string name="intro_alarms_description">We need to be able to set alarms to schedule sync\'s. Dont worry, we will never ring your phone!</string>
     <string name="operation_start_sync">Started Sync</string>
     <string name="operation_sync_cancelled">Sync was cancelled</string>
-    <string name="intro_notifications_denied">You wont get notifications.</string>
-    <string name="intro_alarms_denied">We can\'t schedule alarms now.</string>
     <string name="app_error_notification_channel_name">App Errors</string>
     <string name="app_error_notification_channel_description">Errors that are specific to this app and its permissions will be shown via this channel</string>
     <string name="permissionFragment">Permissions</string>
