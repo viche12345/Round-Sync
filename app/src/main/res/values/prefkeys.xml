@@ -21,6 +21,8 @@
     <string name="pref_key_proxy_host" translatable="false">proxy_host</string>
     <string name="pref_key_proxy_port" translatable="false">proxy_port</string>
     <string name="pref_key_proxy_protocol" translatable="false">proxy_protocol</string>
+    <string name="pref_key_proxy_username" translatable="false">proxy_username</string>
+    <string name="pref_key_proxy_password" translatable="false">proxy_password</string>
     <string name="pref_key_no_proxy_hosts" translatable="false">no_proxy_hosts</string>
     <string name="pref_key_locale" translatable="false">locale</string>
     <string name="pref_key_go_to_default_set" translatable="false">pref_key_go_to_default_set</string>

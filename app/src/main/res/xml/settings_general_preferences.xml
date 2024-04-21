@@ -71,6 +71,21 @@
             app:dependency="@string/pref_key_use_proxy"
             app:useSimpleSummaryProvider="true" />
 
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="@string/pref_key_proxy_username"
+            android:title="@string/pref_proxy_user"
+            app:dependency="@string/pref_key_use_proxy"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="@string/pref_key_proxy_password"
+            android:title="@string/pref_proxy_password"
+            app:dependency="@string/pref_key_use_proxy"
+            android:inputType="textPassword"
+            android:password="true"
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -602,4 +602,6 @@
     <string name="preference_category_header_rclone">Rclone</string>
     <string name="preference_category_header_updates">Updates</string>
     <string name="preference_category_header_reports">Reports</string>
+    <string name="pref_proxy_user">Username</string>
+    <string name="pref_proxy_password">Password</string>
 </resources>

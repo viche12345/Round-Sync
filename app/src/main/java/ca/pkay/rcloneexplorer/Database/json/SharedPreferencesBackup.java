@@ -27,6 +27,7 @@ public class SharedPreferencesBackup {
         String proxyProtocol = sharedPreferences.getString(context.getString(R.string.pref_key_proxy_protocol), "http");
         String proxyHost = sharedPreferences.getString(context.getString(R.string.pref_key_proxy_host), "localhost");
         int proxyPort = sharedPreferences.getInt(context.getString(R.string.pref_key_proxy_port), 8080);
+        String proxyUser = sharedPreferences.getString(context.getString(R.string.pref_key_proxy_username), "");
 
         // File Access
         boolean safEnabled = sharedPreferences.getBoolean(context.getString(R.string.pref_key_enable_saf), false);
@@ -56,6 +57,7 @@ public class SharedPreferencesBackup {
         main.put("proxyProtocol", proxyProtocol);
         main.put("proxyHost", proxyHost);
         main.put("proxyPort", proxyPort);
+        main.put("proxyUser", proxyUser);
         main.put("safEnabled", safEnabled);
         main.put("refreshLaEnabled", refreshLaEnabled);
         main.put("vcpEnabled", vcpEnabled);
@@ -83,6 +85,7 @@ public class SharedPreferencesBackup {
         editor.putString(context.getString(R.string.pref_key_proxy_protocol), jsonObject.getString("proxyProtocol"));
         editor.putString(context.getString(R.string.pref_key_proxy_host), jsonObject.getString("proxyHost"));
         editor.putInt(context.getString(R.string.pref_key_proxy_port), jsonObject.getInt("proxyPort"));
+        editor.putString(context.getString(R.string.pref_key_proxy_username), jsonObject.getString("proxyUser"));
 
         // File Access
         editor.putBoolean(context.getString(R.string.pref_key_enable_saf), jsonObject.getBoolean("safEnabled"));
