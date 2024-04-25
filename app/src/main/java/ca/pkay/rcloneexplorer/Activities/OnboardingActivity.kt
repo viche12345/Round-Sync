@@ -16,13 +16,20 @@ import ca.pkay.rcloneexplorer.R
 import ca.pkay.rcloneexplorer.util.PermissionManager
 import com.github.appintro.AppIntro2
 import de.felixnuesse.extract.onboarding.IdentifiableAppIntroFragment
+import de.felixnuesse.extract.onboarding.IdentifiableSwitchAppIntroFragment
 import de.felixnuesse.extract.onboarding.SlideLeaveInterface
+import de.felixnuesse.extract.onboarding.SlideSwitchCallback
+import de.felixnuesse.extract.updates.UpdateChecker
 
 
-class OnboardingActivity : AppIntro2(), SlideLeaveInterface {
+class OnboardingActivity : AppIntro2(), SlideLeaveInterface, SlideSwitchCallback {
 
     companion object {
         private const val intro_v1_12_0_completed = "intro_v1_12_0_completed"
+        private const val intro_v2_5_2_completed = "intro_v2_5_4_completed"
+
+        // please add all intro versions to onDonePressed.
+        private const val latest_intro = intro_v2_5_2_completed
 
         private const val SLIDE_ID_WELCOME = "SLIDE_ID_WELCOME"
         private const val SLIDE_ID_COMMUNITY = "SLIDE_ID_COMMUNITY"
@@ -32,9 +39,10 @@ class OnboardingActivity : AppIntro2(), SlideLeaveInterface {
         private const val SLIDE_ID_BATTERY_OPTIMIZATION = "SLIDE_ID_BATTERY_OPTIMIZATION"
         private const val SLIDE_ID_ALARMS = "SLIDE_ID_ALARMS"
         private const val SLIDE_ID_SUCCESS = "SLIDE_ID_SUCCESS"
+        private const val SLIDE_ID_UPDATECHECK = "SLIDE_ID_UPDATECHECK"
 
         fun completedIntro(context: Context): Boolean {
-            return  PreferenceManager.getDefaultSharedPreferences(context).getBoolean(intro_v1_12_0_completed, false)
+            return  PreferenceManager.getDefaultSharedPreferences(context).getBoolean(latest_intro, false)
         }
     }
 
@@ -66,7 +74,18 @@ class OnboardingActivity : AppIntro2(), SlideLeaveInterface {
         isSystemBackButtonLocked = true
 
 
-        if (!mPreferences.getBoolean(intro_v1_12_0_completed, false)) {
+        val v1_12_0 = mPreferences.getBoolean(intro_v1_12_0_completed, false)
+        val v2_5_2 = mPreferences.getBoolean(intro_v2_5_2_completed, false)
+        // fix Opt-In updatecheck in 2.5.1
+        // i forcefully reset the appupdate check, so that it will be off, going forward.
+        // later we ask for permission again.
+
+        if(v1_12_0 && !v2_5_2) {
+            // only if the app has been set up, and before v2.5.2.
+            mPreferences.edit().putBoolean(getString(R.string.pref_key_app_updates), false).apply()
+        }
+
+        if (!v1_12_0) {
             addSlide(
                 IdentifiableAppIntroFragment.createInstance(
                     title = getString(R.string.intro_welcome_title),
@@ -158,6 +177,21 @@ class OnboardingActivity : AppIntro2(), SlideLeaveInterface {
             switchColor()
         }
 
+        val updatesAlreadyEnabled = mPreferences.getBoolean(getString(R.string.pref_key_app_updates), false)
+        if(UpdateChecker(this.applicationContext).isUpdateableInstall() && !updatesAlreadyEnabled) {
+            addSlide(
+                IdentifiableSwitchAppIntroFragment.createInstance(
+                    title = getString(R.string.intro_update_checks_title),
+                    description = getString(R.string.intro_update_checks_description),
+                    imageDrawable = R.drawable.undraw_update,
+                    backgroundColorRes = color,
+                    id = SLIDE_ID_UPDATECHECK,
+                    callback = this,
+                    switchCallback = this
+                ))
+            switchColor()
+        }
+
         addSlide(
             IdentifiableAppIntroFragment.createInstance(
                 title = getString(R.string.intro_success),
@@ -174,6 +208,7 @@ class OnboardingActivity : AppIntro2(), SlideLeaveInterface {
         PreferenceManager.getDefaultSharedPreferences(this)
             .edit()
             .putBoolean(intro_v1_12_0_completed, true)
+            .putBoolean(intro_v2_5_2_completed, true)
             .apply()
         startActivity(Intent(this, MainActivity::class.java))
         finish()
@@ -224,6 +259,15 @@ class OnboardingActivity : AppIntro2(), SlideLeaveInterface {
             color = R.color.intro_color2
         } else {
             color = R.color.intro_color1
+        }
+    }
+
+    override fun switchChanged(id: String, isChecked: Boolean) {
+        when(id) {
+            SLIDE_ID_UPDATECHECK -> {
+                mPreferences.edit().putBoolean(getString(R.string.pref_key_app_updates), isChecked).apply()
+            }
+            else -> {}
         }
     }
 }

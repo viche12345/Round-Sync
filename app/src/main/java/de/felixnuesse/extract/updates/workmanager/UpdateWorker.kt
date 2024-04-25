@@ -24,7 +24,7 @@ class UpdateWorker (private var mContext: Context, workerParams: WorkerParameter
 
     private val preferenceManager = PreferenceManager.getDefaultSharedPreferences(mContext)
 
-    private var checkForUpdates = preferenceManager.getBoolean(mContext.getString(R.string.pref_key_app_updates), true)
+    private var checkForUpdates = preferenceManager.getBoolean(mContext.getString(R.string.pref_key_app_updates), false)
     private val ignoredVersion = preferenceManager.getString(mContext.getString(R.string.pref_key_app_update_dismiss_current_update), "")
     private val lastFoundVersion = preferenceManager.getString(mContext.getString(R.string.pref_key_app_updates_found_update_for_version), "")?:""
 

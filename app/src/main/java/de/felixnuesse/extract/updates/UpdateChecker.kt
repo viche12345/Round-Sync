@@ -12,7 +12,7 @@ class UpdateChecker(private var mContext: Context) {
 
     private val preferenceManager = PreferenceManager.getDefaultSharedPreferences(mContext)
 
-    private var checkForUpdates = preferenceManager.getBoolean(mContext.getString(R.string.pref_key_app_updates), true)
+    private var checkForUpdates = preferenceManager.getBoolean(mContext.getString(R.string.pref_key_app_updates), false)
 
     private var updateManager = UpdateManager(mContext)
 
@@ -31,7 +31,7 @@ class UpdateChecker(private var mContext: Context) {
         updateManager.queueRepeating()
     }
 
-    private fun isUpdateableInstall(): Boolean {
+    fun isUpdateableInstall(): Boolean {
         val storeApps = mutableListOf(
             "com.android.vending",
             "com.google.android.feedback",

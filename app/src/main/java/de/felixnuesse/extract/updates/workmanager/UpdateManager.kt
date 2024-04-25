@@ -16,7 +16,7 @@ class UpdateManager(private var mContext: Context) {
     }
 
     fun queueRepeating() {
-        val checkRequest = PeriodicWorkRequestBuilder<UpdateWorker>(1, TimeUnit.DAYS)
+        val checkRequest = PeriodicWorkRequestBuilder<UpdateWorker>(14, TimeUnit.DAYS)
         checkRequest.setConstraints(getConstrains())
         work(checkRequest.build())
     }

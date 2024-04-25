@@ -42,7 +42,7 @@ public class SharedPreferencesBackup {
         boolean isWrapFilenames = sharedPreferences.getBoolean(context.getString(R.string.pref_key_wrap_filenames), true);
 
         // Notifications
-        boolean appUpdates = sharedPreferences.getBoolean(context.getString(R.string.pref_key_app_updates), true);
+        boolean appUpdates = sharedPreferences.getBoolean(context.getString(R.string.pref_key_app_updates), false);
 
         // Logging
         boolean useLogs = sharedPreferences.getBoolean(context.getString(R.string.pref_key_logs), false);
