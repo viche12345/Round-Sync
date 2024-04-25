@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
 import androidx.preference.Preference
+import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import ca.pkay.rcloneexplorer.R
@@ -22,6 +23,10 @@ class NotificationPreferencesFragment : PreferenceFragmentCompat(),
         setPreferencesFromResource(R.xml.settings_notification_preferences, rootKey)
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
         requireActivity().title = getString(R.string.notifications_pref_title)
+
+        if(UpdateChecker(requireContext()).isManagedInstallation()) {
+            findPreference<PreferenceCategory>("TempKeyUpdateGroup")?.isVisible = false
+        }
 
         val notificationSettings = findPreference<Preference>("TempKeyNotificationSettings") as ButtonPreference
         notificationSettings.setButtonText(getString(R.string.open_notification_settings_button))

@@ -19,7 +19,7 @@ class UpdateChecker(private var mContext: Context) {
 
     init {
         if(checkForUpdates) {
-            checkForUpdates = isUpdateableInstall()
+            checkForUpdates = !isManagedInstallation()
         }
     }
 
@@ -31,7 +31,7 @@ class UpdateChecker(private var mContext: Context) {
         updateManager.queueRepeating()
     }
 
-    fun isUpdateableInstall(): Boolean {
+    fun isManagedInstallation(): Boolean {
         val storeApps = mutableListOf(
             "com.android.vending",
             "com.google.android.feedback",
@@ -46,7 +46,7 @@ class UpdateChecker(private var mContext: Context) {
             mContext.packageManager.getInstallerPackageName(mContext.packageName)
         }
 
-        return !storeApps.contains(sourcePackage)
+        return storeApps.contains(sourcePackage)
     }
 
 }

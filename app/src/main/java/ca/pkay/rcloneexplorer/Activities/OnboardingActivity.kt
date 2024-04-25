@@ -42,7 +42,9 @@ class OnboardingActivity : AppIntro2(), SlideLeaveInterface, SlideSwitchCallback
         private const val SLIDE_ID_UPDATECHECK = "SLIDE_ID_UPDATECHECK"
 
         fun completedIntro(context: Context): Boolean {
-            return  PreferenceManager.getDefaultSharedPreferences(context).getBoolean(latest_intro, false)
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            // if it is a managed installation, dont show the intro screen for updates.
+            return prefs.getBoolean(latest_intro, UpdateChecker(context).isManagedInstallation())
         }
     }
 
@@ -178,7 +180,7 @@ class OnboardingActivity : AppIntro2(), SlideLeaveInterface, SlideSwitchCallback
         }
 
         val updatesAlreadyEnabled = mPreferences.getBoolean(getString(R.string.pref_key_app_updates), false)
-        if(UpdateChecker(this.applicationContext).isUpdateableInstall() && !updatesAlreadyEnabled) {
+        if(!UpdateChecker(this.applicationContext).isManagedInstallation() && !updatesAlreadyEnabled) {
             addSlide(
                 IdentifiableSwitchAppIntroFragment.createInstance(
                     title = getString(R.string.intro_update_checks_title),

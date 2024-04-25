@@ -1,6 +1,9 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <PreferenceCategory android:title="@string/preference_category_header_updates">
+    <PreferenceCategory
+        android:title="@string/preference_category_header_updates"
+        android:key="TempKeyUpdateGroup"
+        >
 
         <SwitchPreference
             android:defaultValue="false"
