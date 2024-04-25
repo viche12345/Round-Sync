@@ -2,29 +2,21 @@ package de.felixnuesse.extract.updates.workmanager
 
 import android.content.Context
 import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import androidx.work.WorkRequest
 import java.util.concurrent.TimeUnit
 
 class UpdateManager(private var mContext: Context) {
 
     companion object {
-        private val TAG_ONETIME = "TAG_ONETIME"
         private val TAG_REPEATING = "TAG_REPEATING"
     }
 
-
-    fun queueOnetime() {
-        val uploadWorkRequest = OneTimeWorkRequestBuilder<UpdateWorker>()
-        uploadWorkRequest.addTag(TAG_ONETIME)
-        work(uploadWorkRequest.build())
-    }
-
     fun queueRepeating() {
-        val checkRequest = PeriodicWorkRequestBuilder<UpdateWorker>(15, TimeUnit.MINUTES)
+        val checkRequest = PeriodicWorkRequestBuilder<UpdateWorker>(1, TimeUnit.DAYS)
         checkRequest.setConstraints(getConstrains())
         work(checkRequest.build())
     }
@@ -37,16 +29,8 @@ class UpdateManager(private var mContext: Context) {
         return constraints
     }
 
-    private fun work(request: WorkRequest) {
-        WorkManager.getInstance(mContext).enqueue(request)
-    }
-
-    fun cancelOnetime() {
-        WorkManager.getInstance(mContext).cancelAllWorkByTag(TAG_ONETIME)
-    }
-
-    fun cancelRepeating() {
-        WorkManager.getInstance(mContext).cancelAllWorkByTag(TAG_REPEATING)
+    private fun work(request: PeriodicWorkRequest) {
+        WorkManager.getInstance(mContext).enqueueUniquePeriodicWork(TAG_REPEATING, ExistingPeriodicWorkPolicy.KEEP, request)
     }
 
     fun cancelAll() {

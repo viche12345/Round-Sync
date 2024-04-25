@@ -50,7 +50,7 @@ class UpdateWorker (private var mContext: Context, workerParams: WorkerParameter
         val source =  GithubTagSource(
             ownerUsername = "newhinton",
             repoName = "Round-Sync",
-            currentVersion = "v1.0.0" //Todo: BuildConfig.VERSION_NAME
+            currentVersion = BuildConfig.VERSION_NAME
         )
 
         val customVersionComparator = object : VersionComparator<String> {

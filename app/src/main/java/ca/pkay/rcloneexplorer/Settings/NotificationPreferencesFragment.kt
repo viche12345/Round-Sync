@@ -9,10 +9,12 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import ca.pkay.rcloneexplorer.R
 import de.felixnuesse.extract.settings.preferences.ButtonPreference
+import de.felixnuesse.extract.updates.UpdateChecker
 import es.dmoral.toasty.Toasty
 
 
-class NotificationPreferencesFragment : PreferenceFragmentCompat() {
+class NotificationPreferencesFragment : PreferenceFragmentCompat(),
+    SharedPreferences.OnSharedPreferenceChangeListener {
 
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -41,4 +43,21 @@ class NotificationPreferencesFragment : PreferenceFragmentCompat() {
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        preferenceManager.sharedPreferences!!.registerOnSharedPreferenceChangeListener(this)
+    }
+
+    override fun onPause() {
+        preferenceManager.sharedPreferences!!.unregisterOnSharedPreferenceChangeListener(this)
+        super.onPause()
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        if(key == getString(R.string.pref_key_app_updates)) {
+            UpdateChecker(requireContext()).schedule()
+        }
+    }
+
 }
