@@ -26,7 +26,7 @@ class OnboardingActivity : AppIntro2(), SlideLeaveInterface, SlideSwitchCallback
 
     companion object {
         private const val intro_v1_12_0_completed = "intro_v1_12_0_completed"
-        private const val intro_v2_5_2_completed = "intro_v2_5_4_completed"
+        private const val intro_v2_5_2_completed = "intro_v2_5_2_completed"
 
         // please add all intro versions to onDonePressed.
         private const val latest_intro = intro_v2_5_2_completed
