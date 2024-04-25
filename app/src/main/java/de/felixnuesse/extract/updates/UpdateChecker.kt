@@ -37,7 +37,8 @@ class UpdateChecker(private var mContext: Context) {
             "com.google.android.feedback",
             "org.fdroid.basic",
             "org.fdroid.fdroid",
-            "com.aurora.store"
+            "com.aurora.store",
+            "dev.imranr.obtainium"
         )
 
         val sourcePackage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
