@@ -1,17 +1,23 @@
 package de.felixnuesse.extract.onboarding
 
-import android.util.Log
+import android.os.Bundle
+import android.view.View
+import android.widget.CompoundButton
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.FontRes
+import androidx.appcompat.widget.SwitchCompat
+import ca.pkay.rcloneexplorer.R
 import com.github.appintro.AppIntroBaseFragment
 import com.github.appintro.AppIntroFragment
 import com.github.appintro.SlidePolicy
 import com.github.appintro.model.SliderPage
 
-class IdentifiableAppIntroFragment : AppIntroBaseFragment(), SlidePolicy {
+open class IdentifiableSwitchAppIntroFragment : AppIntroBaseFragment(), SlidePolicy,
+    CompoundButton.OnCheckedChangeListener {
 
-    private var slideLeaveCallback: SlideLeaveInterface? = null
+    var slideLeaveCallback: SlideLeaveInterface? = null
+    var switchCallback: SlideSwitchCallback? = null
 
     // If user should be allowed to leave this slide. This fails open
     override val isPolicyRespected: Boolean
@@ -21,15 +27,21 @@ class IdentifiableAppIntroFragment : AppIntroBaseFragment(), SlidePolicy {
         slideLeaveCallback?.onSlideLeavePrevented(slideId)
     }
 
-    override val layoutId: Int get() = com.github.appintro.R.layout.appintro_fragment_intro
+    override val layoutId: Int get() = R.layout.appintro_fragment_intro_switch
 
     var slideId: String = ""
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        view.findViewById<SwitchCompat>(R.id.description).setOnCheckedChangeListener(this)
+    }
+
 
     companion object {
 
 
         /**
-         * Generates a new instance for [IdentifiableAppIntroFragment]
+         * Generates a new instance for [IdentifiableSwitchAppIntroFragment]
          *
          * @param title CharSequence which will be the slide title
          * @param description CharSequence which will be the slide description
@@ -59,8 +71,9 @@ class IdentifiableAppIntroFragment : AppIntroBaseFragment(), SlidePolicy {
             @FontRes descriptionTypefaceFontRes: Int = 0,
             @DrawableRes backgroundDrawable: Int = 0,
             id: String,
-            callback: SlideLeaveInterface
-        ): IdentifiableAppIntroFragment {
+            callback: SlideLeaveInterface,
+            switchCallback: SlideSwitchCallback
+        ): IdentifiableSwitchAppIntroFragment {
             return createInstance(
                 SliderPage(
                     title = title,
@@ -72,7 +85,7 @@ class IdentifiableAppIntroFragment : AppIntroBaseFragment(), SlidePolicy {
                     titleTypefaceFontRes = titleTypefaceFontRes,
                     descriptionTypefaceFontRes = descriptionTypefaceFontRes,
                     backgroundDrawable = backgroundDrawable
-                ), id, callback
+                ), id, callback, switchCallback
             )
         }
 
@@ -85,12 +98,17 @@ class IdentifiableAppIntroFragment : AppIntroBaseFragment(), SlidePolicy {
          * @return An [AppIntroFragment] created instance
          */
         @JvmStatic
-        fun createInstance(sliderPage: SliderPage, id: String, callback: SlideLeaveInterface): IdentifiableAppIntroFragment {
-            val slide = IdentifiableAppIntroFragment()
+        fun createInstance(sliderPage: SliderPage, id: String, callback: SlideLeaveInterface, switchCallback: SlideSwitchCallback): IdentifiableSwitchAppIntroFragment {
+            val slide = IdentifiableSwitchAppIntroFragment()
             slide.arguments = sliderPage.toBundle()
             slide.slideId = id
             slide.slideLeaveCallback = callback
+            slide.switchCallback = switchCallback
             return slide
         }
+    }
+
+    override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+        switchCallback?.switchChanged(slideId, isChecked)
     }
 }
