@@ -207,5 +207,4 @@ dependencies {
 
     //Updates
     implementation 'com.github.Sharkaboi:AppUpdateChecker:v1.0.5'
-    implementation("com.google.android.play:app-update-ktx:2.1.0")
 }
