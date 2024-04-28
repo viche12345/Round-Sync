@@ -291,6 +291,7 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
         }
         showFailNotification(notificationId, content)
         endNotificationAlreadyPosted = true
+        finishWork()
     }
 
     private fun showCancelledNotification(notificationId: Int) {
@@ -407,9 +408,11 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
     private val connectivityChangeBroadcastReceiver: BroadcastReceiver =
         object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
+                if(endNotificationAlreadyPosted){
+                    return
+                }
                 sConnectivityChanged = true
                 failureReason = FAILURE_REASON.CONNECTIVITY_CHANGED
-                finishWork()
             }
         }
 
