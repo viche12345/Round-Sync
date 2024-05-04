@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context="ca.pkay.rcloneexplorer.Activities.FilterActivity">
 
-
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
@@ -35,21 +34,6 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp">
-
-            <de.felixnuesse.ui.BreadcrumbView
-                android:id="@+id/breadcrumb_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:scrollbars="none"
-                android:visibility="gone" />
-        </FrameLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/content_filter" />
