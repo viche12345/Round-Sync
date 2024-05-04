@@ -9,9 +9,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.FrameLayout
 import android.widget.ImageButton
-import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.Switch
 import android.widget.TextView
@@ -168,7 +166,7 @@ class TaskActivity : AppCompatActivity(), FolderSelectorCallback{
             openFilterActivity()
         }
 
-        findViewById<TextView>(R.id.filter_title_textfield).text = existingTask?.title
+        findViewById<TextView>(R.id.task_title_textfield).text = existingTask?.title
         switchWifi.isChecked = existingTask?.wifionly ?: false
         switchMD5sum.isChecked = existingTask?.md5sum ?: false
         switchDeleteExcluded.isChecked = existingTask?.deleteExcluded ?: false
@@ -215,7 +213,7 @@ class TaskActivity : AppCompatActivity(), FolderSelectorCallback{
 
     private fun getTaskValues(id: Long): Task? {
         val taskToPopulate = Task(id)
-        taskToPopulate.title = findViewById<EditText>(R.id.filter_title_textfield).text.toString()
+        taskToPopulate.title = findViewById<EditText>(R.id.task_title_textfield).text.toString()
         val remotename = remoteDropdown.selectedItem.toString()
         taskToPopulate.remoteId = remotename
         val direction = syncDirection.selectedItemPosition + 1

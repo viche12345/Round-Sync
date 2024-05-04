@@ -42,7 +42,7 @@
                         android:textSize="24sp" />
 
                     <EditText
-                        android:id="@+id/filter_title_textfield"
+                        android:id="@+id/task_title_textfield"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
@@ -102,7 +102,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/label_filters"
+                        android:id="@+id/label_direction"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/task_edit_label_direction"
@@ -255,8 +255,6 @@
                                 android:id="@+id/task_edit_filter_options_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:layout_centerVertical="true"
                                 android:background="?selectableItemBackgroundBorderless"
                                 android:contentDescription="@string/task_edit_filter_options_button"
                                 android:minWidth="48dp"
