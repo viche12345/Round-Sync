@@ -102,7 +102,7 @@ class TaskActivity : AppCompatActivity(), FolderSelectorCallback{
                 }
             }
             REQUEST_CODE_FILTER -> if (data != null) {
-                val filterId = data.getLongExtra("filterId", -1)
+                val filterId = data.getLongExtra(FilterActivity.SAVED_FILTER_ID_EXTRA, -1)
                 if(filterId >= 0) {
                     selectFilter(filterId)
                 }

@@ -96,7 +96,7 @@ class FilterActivity : AppCompatActivity() {
         if (updatedFilter != null) {
             dbHandler.updateFilter(updatedFilter)
             val resultIntent = Intent()
-            resultIntent.putExtra("filterId", updatedFilter.id)
+            resultIntent.putExtra(SAVED_FILTER_ID_EXTRA, updatedFilter.id)
             setResult(Activity.RESULT_OK, resultIntent)
             finish()
         }
@@ -107,7 +107,7 @@ class FilterActivity : AppCompatActivity() {
         if (newFilter != null) {
             val filter = dbHandler.createFilter(newFilter)
             val resultIntent = Intent()
-            resultIntent.putExtra("filterId", filter.id)
+            resultIntent.putExtra(SAVED_FILTER_ID_EXTRA, filter.id)
             setResult(Activity.RESULT_OK, resultIntent)
             finish()
         }
@@ -136,5 +136,6 @@ class FilterActivity : AppCompatActivity() {
     }
     companion object {
         const val ID_EXTRA = "FILTER_EDIT_ID"
+        const val SAVED_FILTER_ID_EXTRA = "filterId"
     }
 }
