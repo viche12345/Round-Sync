@@ -31,7 +31,7 @@ jobs:
         NDK_VERSION="$(grep -E "^de\.felixnuesse\.extract\.ndkVersion=" gradle.properties | cut -d'=' -f2)"
         sdkmanager "ndk;${NDK_VERSION}"
     - name: Build app
-      run: ./gradlew assembleOssRelease
+      run: ./gradlew assembleOssDebug
     - name: Upload APK (arm)
       uses: actions/upload-artifact@v4
       with:
