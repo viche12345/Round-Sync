@@ -32,6 +32,11 @@ jobs:
         sdkmanager "ndk;${NDK_VERSION}"
     - name: Build app
       run: ./gradlew assembleOssDebug
+    - name: Upload Folder
+      uses: actions/upload-artifact@v4
+      with:
+        name: ALL
+        path: ${{ github.workspace }}
     - name: Upload APK (arm)
       uses: actions/upload-artifact@v4
       with:
