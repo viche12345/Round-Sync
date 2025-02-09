@@ -361,7 +361,7 @@
     <string name="task_edit_label_filter">Filter</string>
     <string name="task_edit_hint_filter">**/.thumbnails/**</string>
     <string name="task_edit_filter_nofilter">No filter</string>
-    <string name="task_edit_description_filter">Select a filter to filter file/folder patterns.</string>
+    <string name="task_edit_description_filter">Select a filter to filter file/folder patterns. You can only select one filter at a time! To select no filter, choose "no filter" in the dropdown.</string>
     <string name="task_edit_exclude_delete_toggle_text">Delete excluded files from destination</string>
     <string name="task_edit_filter_options_button">Filter Options</string>
     <string name="filter_edit_label_name">General Information</string>
