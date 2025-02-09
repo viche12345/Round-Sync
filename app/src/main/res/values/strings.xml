@@ -386,8 +386,8 @@
     <string name="sync_notification_transferred">Transferred %1$s of %2$s</string>
     <string name="sync_notification_speed">"Speed:     %s"</string>
     <string name="sync_notification_remaining">"Remaining: %s"</string>
-    <string name="sync_notification_errors">"Errors:    %s"</string>
-    <string name="sync_notification_deletions">"Deletions: %s"</string>
+    <string name="sync_notification_errors">"Errors:    %d"</string>
+    <string name="sync_notification_deletions">"Deletions: %d"</string>
     <string name="sync_notification_file_syncing">File: %14s</string>
     <string name="sync_notification_file_checking">Checking: %14s</string>
     <string name="sync_notification_elapsed">Elapsed: %14s</string>

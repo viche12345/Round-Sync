@@ -355,9 +355,9 @@
     <string name="sync_notification_transferred">%s von %s übertragen</string>
     <string name="sync_notification_speed">"Geschwindigkeit:   %s"</string>
     <string name="sync_notification_remaining">"Verbleibend:         %s"</string>
-    <string name="sync_notification_errors">"Fehler:              %s"</string>
+    <string name="sync_notification_errors">"Fehler:              %d"</string>
     <string name="sync_notification_elapsed">"Vergangen:           %s"</string>
-    <string name="sync_notification_deletions">Löschungen: %s</string>
+    <string name="sync_notification_deletions">Löschungen: %d</string>
     <string name="sync_notification_file_syncing">"Datei:               %s"</string>
     <string name="sync_notification_file_checking">"Checking:            %s"</string>
     <string name="sync_notification_short">%s von %s, %s verbleibend</string>
