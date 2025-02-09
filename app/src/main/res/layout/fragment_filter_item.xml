@@ -24,7 +24,7 @@
             android:id="@+id/filter_entry_filter_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/filter_type_exclude"
+            android:hint="@string/filter_entry_filter_text"
             android:importantForAutofill="no"
             android:inputType="text"
             android:text="Name"
