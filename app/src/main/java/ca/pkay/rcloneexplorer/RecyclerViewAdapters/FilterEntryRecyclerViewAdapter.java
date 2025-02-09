@@ -74,9 +74,7 @@ public class FilterEntryRecyclerViewAdapter extends RecyclerView.Adapter<FilterE
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        holder.fileOptions.setOnClickListener(v-> {
-            showFileMenu(v, selectedFilterEntry);
-        });
+        holder.fileOptions.setOnClickListener(v -> removeItem(selectedFilterEntry));
 
     }
 
@@ -93,22 +91,6 @@ public class FilterEntryRecyclerViewAdapter extends RecyclerView.Adapter<FilterE
         return filterEntries.size();
     }
 
-    private void showFileMenu(View view, final FilterEntry filterEntry) {
-        PopupMenu popupMenu = new PopupMenu(context, view);
-        popupMenu.getMenuInflater().inflate(R.menu.filter_entry_item_menu, popupMenu.getMenu());
-        popupMenu.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.action_delete_filter_entry:
-                    removeItem(filterEntry);
-                    break;
-                default:
-                    return false;
-            }
-            return true;
-        });
-        popupMenu.show();
-    }
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         final View view;
@@ -121,7 +103,7 @@ public class FilterEntryRecyclerViewAdapter extends RecyclerView.Adapter<FilterE
             this.view = itemView;
             this.filterTypeSpinner = view.findViewById(R.id.filter_entry_filter_type);
             this.filterText = view.findViewById(R.id.filter_entry_filter_text);
-            this.fileOptions = view.findViewById(R.id.filter_entry_filter_options);
+            this.fileOptions = view.findViewById(R.id.filter_entry_delete);
         }
     }
 }

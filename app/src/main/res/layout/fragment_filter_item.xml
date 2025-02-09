@@ -7,37 +7,45 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_height="match_parent">
 
         <Spinner
             android:id="@+id/filter_entry_filter_type"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="48dp" />
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/filter_entry_filter_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:ems="10"
             android:hint="@string/filter_type_exclude"
             android:importantForAutofill="no"
             android:inputType="text"
-            android:text="Name" />
+            android:text="Name"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/filter_entry_delete"
+            app:layout_constraintStart_toEndOf="@+id/filter_entry_filter_type"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-            android:id="@+id/filter_entry_filter_options"
+            android:id="@+id/filter_entry_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?selectableItemBackgroundBorderless"
+            android:background="@android:color/transparent"
             android:contentDescription="@string/file_options_content_description"
             android:minWidth="48dp"
             android:minHeight="48dp"
             android:padding="4dp"
-            android:src="@drawable/ic_more_vert" />
-    </LinearLayout>
+            android:src="@drawable/ic_delete"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>
