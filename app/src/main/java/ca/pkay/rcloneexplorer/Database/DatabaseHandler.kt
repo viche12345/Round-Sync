@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import ca.pkay.rcloneexplorer.Database.DatabaseInfo.Companion.DATABASE_NAME
 import ca.pkay.rcloneexplorer.Database.DatabaseInfo.Companion.DATABASE_VERSION
 import ca.pkay.rcloneexplorer.Database.DatabaseInfo.Companion.SQL_CREATE_TABLES_TASKS
@@ -14,6 +15,8 @@ import ca.pkay.rcloneexplorer.Database.DatabaseInfo.Companion.SQL_UPDATE_TASK_AD
 import ca.pkay.rcloneexplorer.Database.DatabaseInfo.Companion.SQL_UPDATE_TASK_ADD_MD5
 import ca.pkay.rcloneexplorer.Database.DatabaseInfo.Companion.SQL_UPDATE_TASK_ADD_WIFI
 import ca.pkay.rcloneexplorer.Database.DatabaseInfo.Companion.SQL_UPDATE_TASK_ADD_FILTER_ID
+import ca.pkay.rcloneexplorer.Database.DatabaseInfo.Companion.SQL_UPDATE_TASK_ADD_FOLLOWUPS_FAIL
+import ca.pkay.rcloneexplorer.Database.DatabaseInfo.Companion.SQL_UPDATE_TASK_ADD_FOLLOWUPS_SUCCESS
 import ca.pkay.rcloneexplorer.Database.DatabaseInfo.Companion.SQL_UPDATE_TRIGGER_ADD_TYPE
 import ca.pkay.rcloneexplorer.Items.Filter
 import ca.pkay.rcloneexplorer.Items.Task
@@ -32,6 +35,8 @@ class DatabaseHandler(context: Context?) :
         sqLiteDatabase.execSQL(SQL_UPDATE_TRIGGER_ADD_TYPE)
         sqLiteDatabase.execSQL(SQL_UPDATE_TASK_ADD_FILTER_ID)
         sqLiteDatabase.execSQL(SQL_UPDATE_TASK_ADD_DELETE_EXCLUDED)
+        sqLiteDatabase.execSQL(SQL_UPDATE_TASK_ADD_FOLLOWUPS_FAIL)
+        sqLiteDatabase.execSQL(SQL_UPDATE_TASK_ADD_FOLLOWUPS_SUCCESS)
     }
 
     override fun onUpgrade(sqLiteDatabase: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -49,6 +54,10 @@ class DatabaseHandler(context: Context?) :
             sqLiteDatabase.execSQL(SQL_CREATE_TABLE_FILTERS)
             sqLiteDatabase.execSQL(SQL_UPDATE_TASK_ADD_FILTER_ID)
             sqLiteDatabase.execSQL(SQL_UPDATE_TASK_ADD_DELETE_EXCLUDED)
+        }
+        if (oldVersion < 6) {
+            sqLiteDatabase.execSQL(SQL_UPDATE_TASK_ADD_FOLLOWUPS_FAIL)
+            sqLiteDatabase.execSQL(SQL_UPDATE_TASK_ADD_FOLLOWUPS_SUCCESS)
         }
     }
 
@@ -121,7 +130,7 @@ class DatabaseHandler(context: Context?) :
     }
 
     private val taskProjection: Array<String>
-        private get() = arrayOf(
+        get() = arrayOf(
             Task.COLUMN_NAME_ID,
             Task.COLUMN_NAME_TITLE,
             Task.COLUMN_NAME_REMOTE_ID,
@@ -132,7 +141,9 @@ class DatabaseHandler(context: Context?) :
             Task.COLUMN_NAME_MD5SUM,
             Task.COLUMN_NAME_WIFI_ONLY,
             Task.COLUMN_NAME_FILTER_ID,
-            Task.COLUMN_NAME_DELETE_EXCLUDED
+            Task.COLUMN_NAME_DELETE_EXCLUDED,
+            Task.COLUMN_NAME_ONFAIL_FOLLOWUP,
+            Task.COLUMN_NAME_ONSUCCESS_FOLLOWUP
         )
 
     private fun taskFromCursor(cursor: Cursor): Task {
@@ -147,6 +158,8 @@ class DatabaseHandler(context: Context?) :
         task.wifionly = getBoolean(cursor, 8)
         task.filterId = cursor.getLong(9)
         task.deleteExcluded = getBoolean(cursor, 10)
+        task.onFailFollowup = cursor.getLong(11)
+        task.onSuccessFollowup = cursor.getLong(12)
         return task
     }
 
@@ -177,6 +190,8 @@ class DatabaseHandler(context: Context?) :
         values.put(Task.COLUMN_NAME_WIFI_ONLY, task.wifionly)
         values.put(Task.COLUMN_NAME_FILTER_ID, task.filterId)
         values.put(Task.COLUMN_NAME_DELETE_EXCLUDED, task.deleteExcluded)
+        values.put(Task.COLUMN_NAME_ONFAIL_FOLLOWUP, task.onFailFollowup)
+        values.put(Task.COLUMN_NAME_ONSUCCESS_FOLLOWUP, task.onSuccessFollowup)
         return values
     }
 
