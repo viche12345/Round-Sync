@@ -57,6 +57,10 @@ class TaskActivity : AppCompatActivity(), FolderSelectorCallback{
     private lateinit var switchDeleteExcluded: Switch
 
 
+    private lateinit var onFailDropdown: Spinner
+    private lateinit var onSuccessDropdown: Spinner
+
+
     private lateinit var filterOptionsButton: ImageButton
 
 
@@ -125,6 +129,8 @@ class TaskActivity : AppCompatActivity(), FolderSelectorCallback{
         syncDescription = findViewById(R.id.descriptionSyncDirection)
         filterDropdown = findViewById(R.id.task_filter_spinner)
         switchDeleteExcluded = findViewById(R.id.task_exclude_delete_toggle)
+        onFailDropdown = findViewById(R.id.task_onFail_spinner)
+        onSuccessDropdown = findViewById(R.id.task_onSuccess_spinner)
         fab = findViewById(R.id.saveButton)
         switchWifi = findViewById(R.id.task_wifionly)
         switchMD5sum = findViewById(R.id.task_md5sum)
@@ -161,7 +167,7 @@ class TaskActivity : AppCompatActivity(), FolderSelectorCallback{
             val filter = if(filterDropdown.selectedItemPosition > 0 && filterDropdown.selectedItemPosition < filterDropdown.count) filterItems[filterDropdown.selectedItemPosition - 1] else null
             showFilterMenu(filterOptionsButton, filter)
         }
-        createNewFilterButton = findViewById<Button>(R.id.task_edit_filter_add_button)
+        createNewFilterButton = findViewById(R.id.task_edit_filter_add_button)
         createNewFilterButton.setOnClickListener {
             openFilterActivity()
         }
@@ -174,16 +180,32 @@ class TaskActivity : AppCompatActivity(), FolderSelectorCallback{
         prepareLocal()
         prepareRemote()
         prepareFilterDropdown()
+        prepareOnFailDropdown()
+        prepareOnSuccessDropdown()
     }
 
     private val remoteItems: Array<String?>
-        private get() {
+        get() {
             val remotes = arrayOfNulls<String>(rcloneInstance.remotes.size)
             for (i in rcloneInstance.remotes.indices) {
                 remotes[i] = rcloneInstance.remotes[i].name
             }
             return remotes
         }
+
+    private val taskListWithNone: ArrayList<TaskNameIdPair>
+        get() {
+            val tasks = dbHandler.allTasks
+            val list = ArrayList<TaskNameIdPair>()
+            list.add(TaskNameIdPair(-1, "None"))
+            tasks.forEach{
+                list.add(TaskNameIdPair(it.id, it.title))
+            }
+            return list
+        }
+
+
+
     private val filterItems: List<Filter>
         get() {
             return dbHandler.allFilters
@@ -229,7 +251,9 @@ class TaskActivity : AppCompatActivity(), FolderSelectorCallback{
         taskToPopulate.wifionly = switchWifi.isChecked
         taskToPopulate.md5sum = switchMD5sum.isChecked
         taskToPopulate.deleteExcluded = switchDeleteExcluded.isChecked
-        taskToPopulate.filterId = if(filterDropdown.selectedItemPosition == 0) null else filterItems[filterDropdown.selectedItemPosition - 1].id
+        taskToPopulate.filterId = if(filterDropdown.selectedItemPosition == 0 || filterDropdown.selectedItemPosition == -1) null else filterItems[filterDropdown.selectedItemPosition - 1].id
+        taskToPopulate.onFailFollowup = (onFailDropdown.selectedItem as TaskNameIdPair).id
+        taskToPopulate.onSuccessFollowup = (onSuccessDropdown.selectedItem as TaskNameIdPair).id
 
         // Verify if data is completed
         if (localPath.text.toString() == "") {
@@ -267,6 +291,7 @@ class TaskActivity : AppCompatActivity(), FolderSelectorCallback{
         remotePath.setText(remotePathHolder)
         fab.visibility = View.VISIBLE
     }
+
     private fun selectFilter(filterId: Long) {
         prepareFilterDropdown()
 
@@ -290,6 +315,7 @@ class TaskActivity : AppCompatActivity(), FolderSelectorCallback{
                 }
             }
     }
+
     private fun prepareRemote() {
 
         remotePathHolder = existingTask?.remotePath.toString()
@@ -327,6 +353,54 @@ class TaskActivity : AppCompatActivity(), FolderSelectorCallback{
             }
         }
     }
+
+    private fun prepareOnFailDropdown() {
+        onFailDropdown.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, taskListWithNone)
+        var i = 0
+        var found = 0
+        taskListWithNone.forEach{
+            if(it.id == (existingTask?.onFailFollowup ?: -1)) {
+                found = i
+            }
+            i++
+        }
+        onFailDropdown.setSelection(found)
+
+        onFailDropdown.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parentView: AdapterView<*>?, selectedItemView: View, position: Int, id: Long) {
+                val pair = parentView?.selectedItem as TaskNameIdPair
+                existingTask?.onFailFollowup = pair.id
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>?) {}
+        }
+    }
+
+    private fun prepareOnSuccessDropdown() {
+        onSuccessDropdown.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, taskListWithNone)
+        var i = 0
+        var found = 0
+        taskListWithNone.forEach{
+            if(it.id == (existingTask?.onSuccessFollowup ?: -1)) {
+                found = i
+            }
+            i++
+        }
+        onSuccessDropdown.setSelection(found)
+
+
+        onSuccessDropdown.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parentView: AdapterView<*>?, selectedItemView: View, position: Int, id: Long) {
+                val pair = parentView?.selectedItem as TaskNameIdPair
+                existingTask?.onSuccessFollowup = pair.id
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>?) {}
+        }
+    }
+
+
+
     private fun prepareFilterDropdown() {
         val filterList = filterItems.toMutableList()
 
@@ -443,5 +517,11 @@ class TaskActivity : AppCompatActivity(), FolderSelectorCallback{
         const val REQUEST_CODE_FP_REMOTE = 444
         const val REQUEST_CODE_FILTER = 333
 
+    }
+
+    inner class TaskNameIdPair(var id: Long, private var name: String) {
+        override fun toString(): String {
+            return name
+        }
     }
 }

@@ -9,7 +9,7 @@ class DatabaseInfo {
     companion object {
 
         // If you change the database schema, you must increment the database version.
-        const val DATABASE_VERSION = 5
+        const val DATABASE_VERSION = 6
         const val DATABASE_NAME = "rcloneExplorer.db"
 
 
@@ -41,6 +41,8 @@ class DatabaseInfo {
         val SQL_UPDATE_TRIGGER_ADD_TYPE = "ALTER TABLE ${Trigger.TABLE_NAME} ADD COLUMN ${Trigger.COLUMN_NAME_TYPE} INTEGER DEFAULT ${Trigger.TRIGGER_TYPE_SCHEDULE}"
         val SQL_UPDATE_TASK_ADD_FILTER_ID = "ALTER TABLE ${Task.TABLE_NAME} ADD COLUMN ${Task.COLUMN_NAME_FILTER_ID} INTEGER REFERENCES ${Filter.TABLE_NAME}(${Filter.COLUMN_NAME_ID}) ON DELETE SET NULL"
         val SQL_UPDATE_TASK_ADD_DELETE_EXCLUDED = "ALTER TABLE ${Task.TABLE_NAME} ADD COLUMN ${Task.COLUMN_NAME_DELETE_EXCLUDED} INTEGER"
+        val SQL_UPDATE_TASK_ADD_FOLLOWUPS_FAIL = "ALTER TABLE ${Task.TABLE_NAME} ADD COLUMN ${Task.COLUMN_NAME_ONFAIL_FOLLOWUP} INTEGER"
+        val SQL_UPDATE_TASK_ADD_FOLLOWUPS_SUCCESS = "ALTER TABLE ${Task.TABLE_NAME} ADD COLUMN ${Task.COLUMN_NAME_ONSUCCESS_FOLLOWUP} INTEGER"
 
     }
 }
