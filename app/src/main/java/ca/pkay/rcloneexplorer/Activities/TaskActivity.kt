@@ -251,7 +251,7 @@ class TaskActivity : AppCompatActivity(), FolderSelectorCallback{
         taskToPopulate.wifionly = switchWifi.isChecked
         taskToPopulate.md5sum = switchMD5sum.isChecked
         taskToPopulate.deleteExcluded = switchDeleteExcluded.isChecked
-        taskToPopulate.filterId = if(filterDropdown.selectedItemPosition == 0) null else filterItems[filterDropdown.selectedItemPosition - 1].id
+        taskToPopulate.filterId = if(filterDropdown.selectedItemPosition == 0 || filterDropdown.selectedItemPosition == -1) null else filterItems[filterDropdown.selectedItemPosition - 1].id
         taskToPopulate.onFailFollowup = (onFailDropdown.selectedItem as TaskNameIdPair).id
         taskToPopulate.onSuccessFollowup = (onSuccessDropdown.selectedItem as TaskNameIdPair).id
 
