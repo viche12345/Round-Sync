@@ -24,16 +24,20 @@ import jp.wasabeef.recyclerview.animators.LandingAnimator
 
 class FilterActivity : AppCompatActivity() {
 
-
-    private lateinit var rcloneInstance: Rclone
     private lateinit var dbHandler: DatabaseHandler
 
     private lateinit var filterTitle: EditText
     private lateinit var filterList: RecyclerView
 
-
     private var existingFilter: Filter? = null
     private var filters: ArrayList<FilterEntry> = arrayListOf()
+
+
+    companion object {
+        const val ID_EXTRA = "FILTER_EDIT_ID"
+        const val SAVED_FILTER_ID_EXTRA = "filterId"
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +57,6 @@ class FilterActivity : AppCompatActivity() {
         }
 
 
-        rcloneInstance = Rclone(this)
         dbHandler = DatabaseHandler(this)
         val extras = intent.extras
         val filterId: Long
@@ -128,14 +131,11 @@ class FilterActivity : AppCompatActivity() {
         }
         return filterToPopulate
     }
+
     private fun prepareFilterList() {
         val adapter = FilterEntryRecyclerViewAdapter(filters, this)
         filterList.layoutManager = LinearLayoutManager(this)
         filterList.itemAnimator = LandingAnimator()
         filterList.adapter = adapter
-    }
-    companion object {
-        const val ID_EXTRA = "FILTER_EDIT_ID"
-        const val SAVED_FILTER_ID_EXTRA = "filterId"
     }
 }
