@@ -340,8 +340,8 @@
     <string name="sync_notification_transferred">已转移 %s 共 %s</string>
     <string name="sync_notification_speed">速度: %s</string>
     <string name="sync_notification_remaining">剩余: %s</string>
-    <string name="sync_notification_errors">错误: %s</string>
-    <string name="sync_notification_deletions">删除: %s</string>
+    <string name="sync_notification_errors">错误: %d</string>
+    <string name="sync_notification_deletions">删除: %d</string>
     <string name="sync_notification_file_syncing">文件: %14s</string>
     <string name="sync_notification_file_checking">检查: %14s</string>
     <string name="sync_notification_elapsed">跳过: %14s</string>
