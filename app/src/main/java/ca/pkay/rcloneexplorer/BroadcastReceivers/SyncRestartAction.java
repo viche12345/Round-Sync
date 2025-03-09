@@ -8,6 +8,9 @@ import android.content.Intent;
 
 import ca.pkay.rcloneexplorer.workmanager.SyncManager;
 
+/**
+ * This class requires a receiver declaration in the manifest
+ */
 public class SyncRestartAction extends BroadcastReceiver {
 
     @Override
